@@ -19,7 +19,7 @@ Source0:   http://xorg.freedesktop.org/X11R7.0-RC0/driver/%{tarball}-%{version}.
 #Source0:   http://xorg.freedesktop.org/X11R7.0-RC0/driver/%{tarball}-%{version}-%{cvsdate}.tar.bz2
 License:   MIT/X11
 Group:     User Interface/X Hardware Support
-BuildRoot: %{_tmppath}/%{name}-%{version}-root
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 # FIXME:  If you can see this comment, then the ExclusiveArch entry below
 # is set to the spec file template default.  Please examine the monolithic
