@@ -4,14 +4,14 @@
 # the "filesystem" package.
 %define moduledir %(pkg-config xorg-server --variable=moduledir )
 # define driverdir to the appropriate type for this driver class
-%define driverdir %(pkg-config xorg-server --variable=inputdir )
+%define driverdir	%{moduledir}/input
 
 %define cvsdate xxxxxxx
 
 Summary:   Xorg X11 evdev input driver
 Name:      xorg-x11-drv-evdev
-Version:   1.0.0
-Release:   0
+Version: 1.0.0.1
+Release: 1
 URL:       http://www.x.org
 # FIXME: If using a CVS version, uncomment the second Source0 line and use
 # it instead.
@@ -58,7 +58,7 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 # FIXME: Remove all libtool archives (*.la) from modules directory.  This
 # should be fixed in upstream Makefile.am or whatever.
-find $RPM_BUILD_ROOT%{moduledir} -name '*.la' | xargs rm -f --
+find $RPM_BUILD_ROOT -regex ".*.la$" | xargs rm -f --
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -77,10 +77,13 @@ rm -rf $RPM_BUILD_ROOT
 %{driverdir}/*.so
 # NOTE: Uncomment these if someone ever writes manpages for this driver
 #%dir %{_mandir}
-#%dir %{_mandir}/man4
-#%{_mandir}/man4/*.4*
+#%dir %{_mandir}/man4x
+#%{_mandir}/man4x/*.4x*
 
 %changelog
+* Fri Nov 4 2005 Mike A. Harris <mharris@redhat.com> 1.0.0.1-1
+- Updated xorg-x11-drv-evdev to version 1.0.0.1 from X11R7 RC1
+- Fix *.la file removal.
 * Fri Sep 2 2005 Mike A. Harris <mharris@redhat.com> 1.0.0-0
 - Initial spec file for evdev input driver generated automatically
   by my xorg-driverspecgen script.
