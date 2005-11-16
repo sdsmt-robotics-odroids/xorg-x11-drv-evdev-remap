@@ -10,7 +10,7 @@
 
 Summary:   Xorg X11 evdev input driver
 Name:      xorg-x11-drv-evdev
-Version: 1.0.0.1
+Version: 1.0.0.2
 Release: 1
 URL:       http://www.x.org
 # FIXME: If using a CVS version, uncomment the second Source0 line and use
@@ -81,6 +81,9 @@ rm -rf $RPM_BUILD_ROOT
 #%{_mandir}/man4x/*.4x*
 
 %changelog
+* Wed Nov 16 2005 Mike A. Harris <mharris@redhat.com> 1.0.0.2-1
+- Updated xorg-x11-drv-evdev to version 1.0.0.2 from X11R7 RC2
+
 * Fri Nov 4 2005 Mike A. Harris <mharris@redhat.com> 1.0.0.1-1
 - Updated xorg-x11-drv-evdev to version 1.0.0.1 from X11R7 RC1
 - Fix *.la file removal.
