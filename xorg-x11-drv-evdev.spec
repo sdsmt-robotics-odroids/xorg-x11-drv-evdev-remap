@@ -10,7 +10,7 @@
 
 Summary:   Xorg X11 evdev input driver
 Name:      xorg-x11-drv-evdev
-Version: 1.0.0.2
+Version: 1.0.0.4
 Release: 1
 URL:       http://www.x.org
 # FIXME: If using a CVS version, uncomment the second Source0 line and use
@@ -77,10 +77,14 @@ rm -rf $RPM_BUILD_ROOT
 %{driverdir}/*.so
 # NOTE: Uncomment these if someone ever writes manpages for this driver
 #%dir %{_mandir}
-#%dir %{_mandir}/man4x
-#%{_mandir}/man4x/*.4x*
+#%dir %{_mandir}/man4
+#%{_mandir}/man4/*.4x*
 
 %changelog
+* Tue Dec 20 2005 Mike A. Harris <mharris@redhat.com> 1.0.0.4-1
+- Updated xorg-x11-drv-evdev to version 1.0.0.4 from X11R7 RC4
+- Removed 'x' suffix from manpage dirs to match RC4 upstream.
+
 * Wed Nov 16 2005 Mike A. Harris <mharris@redhat.com> 1.0.0.2-1
 - Updated xorg-x11-drv-evdev to version 1.0.0.2 from X11R7 RC2
 
