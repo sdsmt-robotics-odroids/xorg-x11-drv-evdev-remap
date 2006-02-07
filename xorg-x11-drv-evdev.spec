@@ -7,7 +7,7 @@
 Summary:   Xorg X11 evdev input driver
 Name:      xorg-x11-drv-evdev
 Version: 1.0.0.5
-Release: 1
+Release: 1.1
 URL:       http://www.x.org
 Source0:   http://xorg.freedesktop.org/X11R7.0/src/driver/%{tarball}-%{version}.tar.bz2
 License:   MIT/X11
@@ -52,6 +52,9 @@ rm -rf $RPM_BUILD_ROOT
 #%{_mandir}/man4/*.4*
 
 %changelog
+* Tue Feb 07 2006 Jesse Keating <jkeating@redhat.com> - 1.0.0.5-1.1
+- rebuilt for new gcc4.1 snapshot and glibc changes
+
 * Wed Jan 18 2006 Mike A. Harris <mharris@redhat.com> 1.0.0.5-1
 - Updated xorg-x11-drv-evdev to version 1.0.0.5 from X11R7.0
 
