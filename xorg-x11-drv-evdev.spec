@@ -6,10 +6,10 @@
 
 Summary:   Xorg X11 evdev input driver
 Name:      xorg-x11-drv-evdev
-Version: 1.0.0.5
-Release: 1.2
+Version: 1.1.0
+Release: 1
 URL:       http://www.x.org
-Source0:   http://xorg.freedesktop.org/X11R7.0/src/driver/%{tarball}-%{version}.tar.bz2
+Source0:   http://xorg.freedesktop.org/releases/individual/driver/%{tarball}-%{version}.tar.bz2
 License:   MIT/X11
 Group:     User Interface/X Hardware Support
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -17,9 +17,9 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 ExclusiveArch: %{ix86} x86_64 ia64 ppc alpha sparc sparc64
 
 BuildRequires: pkgconfig
-BuildRequires: xorg-x11-server-sdk
+BuildRequires: xorg-x11-server-sdk >= 1.0.99.901
 
-Requires:  xorg-x11-server-Xorg
+Requires:  xorg-x11-server-Xorg >= 1.0.99.901
 
 %description 
 X.Org X11 evdev input driver.
@@ -49,9 +49,12 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{driverdir}
 %{driverdir}/evdev_drv.so
 #%dir %{_mandir}/man4x
-#%{_mandir}/man4/*.4*
+%{_mandir}/man4/evdev.4*
 
 %changelog
+* Sun Apr  9 2006 Adam Jackson <ajackson@redhat.com> 1.1.0-1
+- Update to 1.1.0 from 7.1RC1.
+
 * Fri Feb 10 2006 Jesse Keating <jkeating@redhat.com> - 1.0.0.5-1.2
 - bump again for double-long bug on ppc(64)
 
