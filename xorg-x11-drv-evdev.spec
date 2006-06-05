@@ -6,8 +6,8 @@
 
 Summary:   Xorg X11 evdev input driver
 Name:      xorg-x11-drv-evdev
-Version: 1.1.0
-Release: 3
+Version: 1.1.2
+Release: 1
 URL:       http://www.x.org
 Source0:   http://xorg.freedesktop.org/releases/individual/driver/%{tarball}-%{version}.tar.bz2
 License:   MIT/X11
@@ -17,18 +17,18 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 ExclusiveArch: %{ix86} x86_64 ia64 ppc alpha sparc sparc64
 
 BuildRequires: pkgconfig
-BuildRequires: xorg-x11-server-sdk >= 1.0.99.901
+BuildRequires: xorg-x11-server-sdk >= 1.1.0
 
-Requires:  xorg-x11-server-Xorg >= 1.0.99.901
+Requires:  xorg-x11-server-Xorg >= 1.1.0
 
-Patch0: evdev-1.1.0-ia64-build-fix.patch
+Patch0: evdev-1.1.2-cvs-20060605.patch
 
 %description 
 X.Org X11 evdev input driver.
 
 %prep
 %setup -q -n %{tarball}-%{version}
-%patch0 -p0 -b .ia64-build-fix
+%patch0 -p0 -b .cvs-20060605
 
 %build
 %configure --disable-static
@@ -55,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man4/evdev.4*
 
 %changelog
+* Mon Jun 05 2006 Adam Jackson <ajackson@redhat.com> 1.1.2-1
+- Update to 1.1.2 + CVS fixes.
+
 * Mon Apr 10 2006 Adam Jackson <ajackson@redhat.com> 1.1.0-3
 - Work around header pollution on ia64, re-add to arch list.
 
