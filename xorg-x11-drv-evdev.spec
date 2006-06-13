@@ -7,14 +7,14 @@
 Summary:   Xorg X11 evdev input driver
 Name:      xorg-x11-drv-evdev
 Version: 1.1.2
-Release: 1
+Release: 2
 URL:       http://www.x.org
 Source0:   http://xorg.freedesktop.org/releases/individual/driver/%{tarball}-%{version}.tar.bz2
 License:   MIT/X11
 Group:     User Interface/X Hardware Support
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-ExclusiveArch: %{ix86} x86_64 ia64 ppc alpha sparc sparc64
+ExclusiveArch: %{ix86} x86_64 ia64 ppc ppc64 alpha sparc sparc64
 
 BuildRequires: pkgconfig
 BuildRequires: xorg-x11-server-sdk >= 1.1.0
@@ -55,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man4/evdev.4*
 
 %changelog
+* Tue Jun 13 2006 Adam Jackson <ajackson@redhat.com> 1.1.2-2
+- Build on ppc64
+
 * Mon Jun 05 2006 Adam Jackson <ajackson@redhat.com> 1.1.2-1
 - Update to 1.1.2 + CVS fixes.
 
