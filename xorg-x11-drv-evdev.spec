@@ -9,10 +9,11 @@ Name:      xorg-x11-drv-evdev
 Version: 1.1.2
 Release: 2
 URL:       http://www.x.org
-Source0:   http://xorg.freedesktop.org/releases/individual/driver/%{tarball}-%{version}.tar.bz2
 License:   MIT/X11
 Group:     User Interface/X Hardware Support
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+
+Source0:   ftp://ftp.x.org/pub/individual/driver/%{tarball}-%{version}.tar.bz2
 
 ExclusiveArch: %{ix86} x86_64 ia64 ppc ppc64 alpha sparc sparc64
 
