@@ -1,3 +1,5 @@
+# Note to self: don't update to 1.1.5 until we have an input-hotplug server.
+
 %define tarball xf86-input-evdev
 %define moduledir %(pkg-config xorg-server --variable=moduledir )
 %define driverdir	%{moduledir}/input
