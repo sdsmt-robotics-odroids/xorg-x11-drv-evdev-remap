@@ -9,7 +9,7 @@
 Summary:   Xorg X11 evdev input driver
 Name:      xorg-x11-drv-evdev
 Version: 1.1.2
-Release: 2.1
+Release: 3%{?dist}
 URL:       http://www.x.org
 License:   MIT/X11
 Group:     User Interface/X Hardware Support
@@ -17,7 +17,7 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Source0:   ftp://ftp.x.org/pub/individual/driver/%{tarball}-%{version}.tar.bz2
 
-ExclusiveArch: %{ix86} x86_64 ia64 ppc ppc64 alpha sparc sparc64
+ExcludeArch: s390 s390x
 
 BuildRequires: pkgconfig
 BuildRequires: xorg-x11-server-sdk >= 1.1.0
@@ -58,6 +58,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man4/evdev.4*
 
 %changelog
+* Fri Feb 16 2007 Adam Jackson <ajax@redhat.com> 1.1.2-3
+- ExclusiveArch -> ExcludeArch
+
 * Wed Jul 12 2006 Jesse Keating <jkeating@redhat.com> - sh: line 0: fg: no job control
 - rebuild
 
