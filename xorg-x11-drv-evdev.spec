@@ -4,14 +4,12 @@
 %define moduledir %(pkg-config xorg-server --variable=moduledir )
 %define driverdir	%{moduledir}/input
 
-%define cvsdate xxxxxxx
-
 Summary:   Xorg X11 evdev input driver
 Name:      xorg-x11-drv-evdev
 Version: 1.1.2
-Release: 3%{?dist}
+Release: 4%{?dist}
 URL:       http://www.x.org
-License:   MIT/X11
+License:   MIT
 Group:     User Interface/X Hardware Support
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -19,10 +17,9 @@ Source0:   ftp://ftp.x.org/pub/individual/driver/%{tarball}-%{version}.tar.bz2
 
 ExcludeArch: s390 s390x
 
-BuildRequires: pkgconfig
-BuildRequires: xorg-x11-server-sdk >= 1.1.0
+BuildRequires: xorg-x11-server-sdk >= 1.3.0.0-6
 
-Requires:  xorg-x11-server-Xorg >= 1.1.0
+Requires:  xorg-x11-server-Xorg >= 1.3.0.0-6
 
 Patch0: evdev-1.1.2-cvs-20060605.patch
 
@@ -51,13 +48,13 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%dir %{moduledir}
-%dir %{driverdir}
 %{driverdir}/evdev_drv.so
-#%dir %{_mandir}/man4x
 %{_mandir}/man4/evdev.4*
 
 %changelog
+* Mon Jun 18 2007 Adam Jackson <ajax@redhat.com> 1.1.2-4
+- Update Requires and BuildRequires.  Disown the module directories.
+
 * Fri Feb 16 2007 Adam Jackson <ajax@redhat.com> 1.1.2-3
 - ExclusiveArch -> ExcludeArch
 
