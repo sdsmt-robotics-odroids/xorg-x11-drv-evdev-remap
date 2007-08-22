@@ -7,7 +7,7 @@
 Summary:   Xorg X11 evdev input driver
 Name:      xorg-x11-drv-evdev
 Version: 1.1.2
-Release: 4%{?dist}
+Release: 5%{?dist}
 URL:       http://www.x.org
 License:   MIT
 Group:     User Interface/X Hardware Support
@@ -52,6 +52,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man4/evdev.4*
 
 %changelog
+* Wed Aug 22 2007 Adam Jackson <ajax@redhat.com> - 1.1.2-5
+- Rebuild for PPC toolchain bug
+
 * Mon Jun 18 2007 Adam Jackson <ajax@redhat.com> 1.1.2-4
 - Update Requires and BuildRequires.  Disown the module directories.
 
