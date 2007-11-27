@@ -6,8 +6,8 @@
 
 Summary:   Xorg X11 evdev input driver
 Name:      xorg-x11-drv-evdev
-Version: 1.1.2
-Release: 5%{?dist}
+Version: 1.2.0
+Release: 1%{?dist}
 URL:       http://www.x.org
 License:   MIT
 Group:     User Interface/X Hardware Support
@@ -21,14 +21,11 @@ BuildRequires: xorg-x11-server-sdk >= 1.3.0.0-6
 
 Requires:  xorg-x11-server-Xorg >= 1.3.0.0-6
 
-Patch0: evdev-1.1.2-cvs-20060605.patch
-
 %description 
 X.Org X11 evdev input driver.
 
 %prep
 %setup -q -n %{tarball}-%{version}
-%patch0 -p0 -b .cvs-20060605
 
 %build
 %configure --disable-static
@@ -52,6 +49,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man4/evdev.4*
 
 %changelog
+* Tue Nov 27 2007 Adam Jackson <ajax@redhat.com> 1.2.0-1
+- xf86-input-evdev 1.2.0
+
 * Wed Aug 22 2007 Adam Jackson <ajax@redhat.com> - 1.1.2-5
 - Rebuild for PPC toolchain bug
 
