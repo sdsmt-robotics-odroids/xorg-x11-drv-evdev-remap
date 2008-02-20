@@ -7,7 +7,7 @@
 Summary:   Xorg X11 evdev input driver
 Name:      xorg-x11-drv-evdev
 Version: 1.2.0
-Release: 1%{?dist}
+Release: 2%{?dist}
 URL:       http://www.x.org
 License:   MIT
 Group:     User Interface/X Hardware Support
@@ -49,6 +49,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man4/evdev.4*
 
 %changelog
+* Wed Feb 20 2008 Fedora Release Engineering <rel-eng@fedoraproject.org> - 1.2.0-2
+- Autorebuild for GCC 4.3
+
 * Tue Nov 27 2007 Adam Jackson <ajax@redhat.com> 1.2.0-1
 - xf86-input-evdev 1.2.0
 
