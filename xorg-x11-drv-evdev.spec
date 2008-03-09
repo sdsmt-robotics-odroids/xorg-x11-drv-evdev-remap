@@ -4,19 +4,24 @@
 %define moduledir %(pkg-config xorg-server --variable=moduledir )
 %define driverdir	%{moduledir}/input
 
+%define gitdate 20080308
+
 Summary:   Xorg X11 evdev input driver
 Name:      xorg-x11-drv-evdev
-Version: 1.2.0
-Release: 2%{?dist}
+Version: 1.99.1
+Release: 0.1%{?dist}
 URL:       http://www.x.org
 License:   MIT
 Group:     User Interface/X Hardware Support
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-Source0:   ftp://ftp.x.org/pub/individual/driver/%{tarball}-%{version}.tar.bz2
+#Source0:   ftp://ftp.x.org/pub/individual/driver/%{tarball}-%{version}.tar.bz2
+Source0:    %{tarball}-%{gitdate}.tar.bz2
+Source1:    make-git-snapshot.sh
 
 ExcludeArch: s390 s390x
 
+BuildRequires: autoconf automake libtool
 BuildRequires: xorg-x11-server-sdk >= 1.3.0.0-6
 
 Requires:  xorg-x11-server-Xorg >= 1.3.0.0-6
@@ -25,9 +30,10 @@ Requires:  xorg-x11-server-Xorg >= 1.3.0.0-6
 X.Org X11 evdev input driver.
 
 %prep
-%setup -q -n %{tarball}-%{version}
+%setup -q -n %{tarball}-%{gitdate}
 
 %build
+autoreconf -v --install || exit 1
 %configure --disable-static
 make
 
@@ -49,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man4/evdev.4*
 
 %changelog
+* Fri Mar 07 2008 Adam Jackson <ajax@redhat.com> 1.99.1-0.1
+- evdev 2.0 git snapshot
+
 * Wed Feb 20 2008 Fedora Release Engineering <rel-eng@fedoraproject.org> - 1.2.0-2
 - Autorebuild for GCC 4.3
 
