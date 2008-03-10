@@ -4,12 +4,12 @@
 %define moduledir %(pkg-config xorg-server --variable=moduledir )
 %define driverdir	%{moduledir}/input
 
-%define gitdate 20080308
+%define gitdate 20080310
 
 Summary:   Xorg X11 evdev input driver
 Name:      xorg-x11-drv-evdev
 Version: 1.99.1
-Release: 0.1%{?dist}
+Release: 0.2%{?dist}
 URL:       http://www.x.org
 License:   MIT
 Group:     User Interface/X Hardware Support
@@ -55,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man4/evdev.4*
 
 %changelog
+* Mon Mar 10 2008 Adam Jackson <ajax@redhat.com> 1.99.1-0.2
+- Updated snapshot, minor bug fixes.
+
 * Fri Mar 07 2008 Adam Jackson <ajax@redhat.com> 1.99.1-0.1
 - evdev 2.0 git snapshot
 
