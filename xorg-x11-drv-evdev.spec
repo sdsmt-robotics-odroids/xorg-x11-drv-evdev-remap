@@ -4,16 +4,16 @@
 %define moduledir %(pkg-config xorg-server --variable=moduledir )
 %define driverdir	%{moduledir}/input
 
-%define gitdate 20080310
+%define gitdate 20080311
 
-Summary:   Xorg X11 evdev input driver
-Name:      xorg-x11-drv-evdev
-Version: 1.99.1
-Release: 0.2%{?dist}
-URL:       http://www.x.org
-License:   MIT
-Group:     User Interface/X Hardware Support
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Summary:    Xorg X11 evdev input driver
+Name:	    xorg-x11-drv-evdev
+Version:    1.99.1
+Release:    0.3%{?dist}
+URL:	    http://www.x.org
+License:    MIT
+Group:	    User Interface/X Hardware Support
+BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 #Source0:   ftp://ftp.x.org/pub/individual/driver/%{tarball}-%{version}.tar.bz2
 Source0:    %{tarball}-%{gitdate}.tar.bz2
@@ -55,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man4/evdev.4*
 
 %changelog
+* Tue Mar 11 2008 Adam Jackson <ajax@redhat.com> 1.99.1-0.3
+- Today's snapshot.  Fixes right/middle button swap hilarity.
+
 * Mon Mar 10 2008 Adam Jackson <ajax@redhat.com> 1.99.1-0.2
 - Updated snapshot, minor bug fixes.
 
