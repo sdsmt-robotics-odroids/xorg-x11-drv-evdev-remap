@@ -1,15 +1,13 @@
-# Note to self: don't update to 1.1.5 until we have an input-hotplug server.
-
 %define tarball xf86-input-evdev
 %define moduledir %(pkg-config xorg-server --variable=moduledir )
 %define driverdir	%{moduledir}/input
 
-%define gitdate 20080311
+%define gitdate 20080312
 
 Summary:    Xorg X11 evdev input driver
 Name:	    xorg-x11-drv-evdev
 Version:    1.99.1
-Release:    0.3%{?dist}
+Release:    0.4%{?dist}
 URL:	    http://www.x.org
 License:    MIT
 Group:	    User Interface/X Hardware Support
@@ -55,6 +53,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man4/evdev.4*
 
 %changelog
+* Wed Mar 12 2008 Adam Jackson <ajax@redhat.com> 1.99.1-0.4
+- Today's snapshot.  Fixes mouse button repeat bug, and therefore Apple
+  Mighty Mice are usable.  Props to jkeating for the hardware.
+
 * Tue Mar 11 2008 Adam Jackson <ajax@redhat.com> 1.99.1-0.3
 - Today's snapshot.  Fixes right/middle button swap hilarity.
 
