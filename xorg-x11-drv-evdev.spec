@@ -2,12 +2,12 @@
 %define moduledir %(pkg-config xorg-server --variable=moduledir )
 %define driverdir	%{moduledir}/input
 
-%define gitdate 20080312
+%define gitdate 20080314
 
 Summary:    Xorg X11 evdev input driver
 Name:	    xorg-x11-drv-evdev
 Version:    1.99.1
-Release:    0.4%{?dist}
+Release:    0.5%{?dist}
 URL:	    http://www.x.org
 License:    MIT
 Group:	    User Interface/X Hardware Support
@@ -53,6 +53,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man4/evdev.4*
 
 %changelog
+* Fri Mar 14 2008 Adam Jackson <ajax@redhat.com> 1.99.1-0.5
+- Today's snapshot.  Maps REL_DIAL to REL_HWHEEL.
+
 * Wed Mar 12 2008 Adam Jackson <ajax@redhat.com> 1.99.1-0.4
 - Today's snapshot.  Fixes mouse button repeat bug, and therefore Apple
   Mighty Mice are usable.  Props to jkeating for the hardware.
