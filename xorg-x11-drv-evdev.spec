@@ -6,15 +6,15 @@
 
 Summary:    Xorg X11 evdev input driver
 Name:	    xorg-x11-drv-evdev
-Version:    1.99.1
-Release:    0.5%{?dist}
+Version:    2.0.2
+Release:    1%{?dist}
 URL:	    http://www.x.org
 License:    MIT
 Group:	    User Interface/X Hardware Support
 BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-#Source0:   ftp://ftp.x.org/pub/individual/driver/%{tarball}-%{version}.tar.bz2
-Source0:    %{tarball}-%{gitdate}.tar.bz2
+Source0:   ftp://ftp.x.org/pub/individual/driver/%{tarball}-%{version}.tar.bz2
+#Source0:    %{tarball}-%{gitdate}.tar.bz2
 Source1:    make-git-snapshot.sh
 
 ExcludeArch: s390 s390x
@@ -28,7 +28,9 @@ Requires:  xorg-x11-server-Xorg >= 1.3.0.0-6
 X.Org X11 evdev input driver.
 
 %prep
-%setup -q -n %{tarball}-%{gitdate}
+#%setup -q -n %{tarball}-%{gitdate}
+%setup -q -n %{tarball}-%{version}
+
 
 %build
 autoreconf -v --install || exit 1
@@ -53,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man4/evdev.4*
 
 %changelog
+* Mon Jul 21 2008 Peter Hutterer <peter.hutterer@redhat.com> 2.0.2-1
+- evdev 2.0.2
+
 * Fri Mar 14 2008 Adam Jackson <ajax@redhat.com> 1.99.1-0.5
 - Today's snapshot.  Maps REL_DIAL to REL_HWHEEL.
 
