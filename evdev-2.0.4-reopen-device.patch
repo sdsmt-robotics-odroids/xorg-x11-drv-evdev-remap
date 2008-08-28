@@ -1,0 +1,265 @@
+From 188f07089d9c91d503391d05f0c3776360d7446b Mon Sep 17 00:00:00 2001
+From: Peter Hutterer <peter.hutterer@redhat.com>
+Date: Thu, 28 Aug 2008 10:24:33 +0930
+Subject: [PATCH] Attempt to re-open devices on read errors.
+
+Coming back from resume may leave us with a file descriptor that can be opened
+but fails on the first read (ENODEV).
+In this case, try to open the device until it becomes available or until the
+predefined count expires.
+
+Adds option "ReopenAttempts" <int>
+(cherry picked from commit b41d39a745cce9e91241453935ea4c702772c5da)
+
+Conflicts:
+
+	man/evdev.man
+	src/evdev.c
+	src/evdev.h
+---
+ man/evdev.man |    5 ++
+ src/evdev.c   |  130 ++++++++++++++++++++++++++++++++++++++++++++++++--------
+ src/evdev.h   |    4 ++
+ 3 files changed, 120 insertions(+), 19 deletions(-)
+
+diff --git a/man/evdev.man b/man/evdev.man
+index f438f78..530f979 100644
+--- a/man/evdev.man
++++ b/man/evdev.man
+@@ -67,6 +67,11 @@ button event is registered.
+ Sets the timeout (in milliseconds) that the driver waits before deciding
+ if two buttons where pressed "simultaneously" when 3 button emulation is
+ enabled.  Default: 50.
++.TP 7
++.BI "Option \*qReopenAttempts\*q \*q" integer \*q
++Number of reopen attempts after a read error occurs on the device (e.g. after
++waking up from suspend). In between each attempt is a 100ms wait. Default: 10.
++
+ .SH AUTHORS
+ Kristian Høgsberg.
+ .SH "SEE ALSO"
+diff --git a/src/evdev.c b/src/evdev.c
+index a857db3..16cf67f 100644
+--- a/src/evdev.c
++++ b/src/evdev.c
+@@ -73,6 +73,7 @@
+ #define EVDEV_RELATIVE_EVENTS	(1 << 2)
+ #define EVDEV_ABSOLUTE_EVENTS	(1 << 3)
+ #define EVDEV_TOUCHPAD		(1 << 4)
++#define EVDEV_INITIALIZED	(1 << 5) /* WheelInit etc. called already? */
+ 
+ #define MIN_KEYCODE 8
+ #define GLYPHS_PER_KEY 2
+@@ -96,6 +97,8 @@ static const char *evdevDefaults[] = {
+     NULL
+ };
+ 
++static int EvdevOn(DeviceIntPtr);
++
+ static void
+ SetXkbOption(InputInfoPtr pInfo, char *name, char **option)
+ {
+@@ -154,6 +157,46 @@ PostKbdEvent(InputInfoPtr pInfo, struct input_event *ev, int value)
+     xf86PostKeyboardEvent(pInfo->dev, code, value);
+ }
+ 
++
++/**
++ * Coming back from resume may leave us with a file descriptor that can be
++ * opened but fails on the first read (ENODEV).
++ * In this case, try to open the device until it becomes available or until
++ * the predefined count expires.
++ */
++static CARD32
++EvdevReopenTimer(OsTimerPtr timer, CARD32 time, pointer arg)
++{
++    InputInfoPtr pInfo = (InputInfoPtr)arg;
++    EvdevPtr pEvdev = pInfo->private;
++
++    do {
++        pInfo->fd = open(pEvdev->device, O_RDWR, 0);
++    } while (pInfo->fd < 0 && errno == EINTR);
++
++    if (pInfo->fd != -1)
++    {
++        xf86Msg(X_INFO, "%s: Device reopened after %d attempts.\n", pInfo->name,
++                pEvdev->reopen_attempts - pEvdev->reopen_left);
++
++        pEvdev->reopen_left = 0;
++        EvdevOn(pInfo->dev);
++        return 0;
++    }
++
++    pEvdev->reopen_left--;
++
++    if (!pEvdev->reopen_left)
++    {
++        xf86Msg(X_ERROR, "%s: Failed to reopen device after %d attempts.\n",
++                pInfo->name, pEvdev->reopen_attempts);
++        DisableDevice(pInfo->dev);
++        return 0;
++    }
++
++    return 100; /* come back in 100 ms */
++}
++
+ static void
+ EvdevReadInput(InputInfoPtr pInfo)
+ {
+@@ -173,6 +216,15 @@ EvdevReadInput(InputInfoPtr pInfo)
+             /* The kernel promises that we always only read a complete
+              * event, so len != sizeof ev is an error. */
+             xf86Msg(X_ERROR, "%s: Read error: %s\n", pInfo->name, strerror(errno));
++
++            if (errno == ENODEV) /* May happen after resume */
++            {
++                xf86RemoveEnabledDevice(pInfo);
++                close(pInfo->fd);
++                pInfo->fd = -1;
++                pEvdev->reopen_left = pEvdev->reopen_attempts;
++                TimerSet(NULL, 0, 100, EvdevReopenTimer, pInfo);
++            }
+             break;
+         }
+ 
+@@ -836,6 +888,47 @@ EvdevInit(DeviceIntPtr device)
+     return Success;
+ }
+ 
++/**
++ * Init all extras (wheel emulation, etc.) and grab the device.
++ *
++ * Coming from a resume, the grab may fail with ENODEV. In this case, we set a
++ * timer to wake up and try to reopen the device later.
++ */
++static int
++EvdevOn(DeviceIntPtr device)
++{
++    InputInfoPtr pInfo;
++    EvdevPtr pEvdev;
++
++    pInfo = device->public.devicePrivate;
++    pEvdev = pInfo->private;
++
++    if (!pEvdev->kernel24 && ioctl(pInfo->fd, EVIOCGRAB, (void *)1))
++        xf86Msg(X_WARNING, "%s: Grab failed (%s)\n", pInfo->name,
++                strerror(errno));
++
++    if (errno == ENODEV) /* may happen after resume */
++    {
++        close(pInfo->fd);
++        pInfo->fd = -1;
++        pEvdev->reopen_left = pEvdev->reopen_attempts;
++        TimerSet(NULL, 0, 100, EvdevReopenTimer, pInfo);
++    } else
++    {
++        xf86AddEnabledDevice(pInfo);
++        if ((pEvdev->flags & EVDEV_BUTTON_EVENTS) &&
++            !(pEvdev->flags & EVDEV_INITIALIZED))
++        {
++            EvdevMBEmuPreInit(pInfo);
++        }
++        pEvdev->flags |= EVDEV_INITIALIZED;
++        device->public.on = TRUE;
++    }
++
++    return Success;
++}
++
++
+ static int
+ EvdevProc(DeviceIntPtr device, int what)
+ {
+@@ -851,30 +944,26 @@ EvdevProc(DeviceIntPtr device, int what)
+ 	return EvdevInit(device);
+ 
+     case DEVICE_ON:
+-        if (!pEvdev->kernel24 && ioctl(pInfo->fd, EVIOCGRAB, (void *)1))
+-            xf86Msg(X_WARNING, "%s: Grab failed (%s)\n", pInfo->name,
+-                    strerror(errno));
+-        if (errno != ENODEV)
+-        {
+-            xf86AddEnabledDevice(pInfo);
+-            if (pEvdev->flags & EVDEV_BUTTON_EVENTS)
+-                EvdevMBEmuPreInit(pInfo);
+-            device->public.on = TRUE;
+-        }
+-	break;
++        return EvdevOn(device);
+ 
+     case DEVICE_OFF:
+-        if (!pEvdev->kernel24 && ioctl(pInfo->fd, EVIOCGRAB, (void *)0))
+-            xf86Msg(X_WARNING, "%s: Release failed (%s)\n", pInfo->name,
+-                    strerror(errno));
+-        xf86RemoveEnabledDevice(pInfo);
+-        EvdevMBEmuFinalize(pInfo);
++        if (pInfo->fd != -1)
++        {
++            if (!pEvdev->kernel24 && ioctl(pInfo->fd, EVIOCGRAB, (void *)0))
++                xf86Msg(X_WARNING, "%s: Release failed (%s)\n", pInfo->name,
++                        strerror(errno));
++            xf86RemoveEnabledDevice(pInfo);
++        }
++        if (pEvdev->flags & EVDEV_INITIALIZED)
++            EvdevMBEmuFinalize(pInfo);
++        pEvdev->flags &= ~EVDEV_INITIALIZED;
+ 	device->public.on = FALSE;
+ 	break;
+ 
+     case DEVICE_CLOSE:
+ 	xf86Msg(X_INFO, "%s: Close\n", pInfo->name);
+-	close(pInfo->fd);
++        if (pInfo->fd != -1)
++            close(pInfo->fd);
+ 	break;
+     }
+ 
+@@ -1060,11 +1149,12 @@ EvdevPreInit(InputDriverPtr drv, IDevPtr dev, int flags)
+         return NULL;
+     }
+ 
++    pEvdev->device = device;
++
+     xf86Msg(deviceFrom, "%s: Device: \"%s\"\n", pInfo->name, device);
+     do {
+         pInfo->fd = open(device, O_RDWR, 0);
+-    }
+-    while (pInfo->fd < 0 && errno == EINTR);
++    } while (pInfo->fd < 0 && errno == EINTR);
+ 
+     if (pInfo->fd < 0) {
+         xf86Msg(X_ERROR, "Unable to open evdev device \"%s\".\n", device);
+@@ -1072,6 +1162,8 @@ EvdevPreInit(InputDriverPtr drv, IDevPtr dev, int flags)
+         return NULL;
+     }
+ 
++    pEvdev->reopen_attempts = xf86SetIntOption(pInfo->options, "ReopenAttempts", 10);
++
+     pEvdev->noXkb = noXkbExtension;
+     /* parse the XKB options during kbd setup */
+ 
+diff --git a/src/evdev.h b/src/evdev.h
+index cad1eed..0f8cf4b 100644
+--- a/src/evdev.h
++++ b/src/evdev.h
+@@ -41,6 +41,7 @@
+ #endif
+ 
+ typedef struct {
++    const char *device;
+     int kernel24;
+     int screen;
+     int min_x, min_y, max_x, max_y;
+@@ -67,6 +68,9 @@ typedef struct {
+         Time                expires;     /* time of expiry */
+         Time                timeout;
+     } emulateMB;
++
++    int reopen_attempts; /* max attempts to re-open after read failure */
++    int reopen_left;     /* number of attempts left to re-open the device */
+ } EvdevRec, *EvdevPtr;
+ 
+ /* Middle Button emulation */
+-- 
+1.5.6.4
+

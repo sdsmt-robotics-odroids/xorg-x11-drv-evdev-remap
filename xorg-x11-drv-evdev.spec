@@ -7,7 +7,7 @@
 Summary:    Xorg X11 evdev input driver
 Name:	    xorg-x11-drv-evdev
 Version:    2.0.4
-Release:    1%{?dist}
+Release:    2%{?dist}
 URL:	    http://www.x.org
 License:    MIT
 Group:	    User Interface/X Hardware Support
@@ -16,6 +16,9 @@ BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Source0:   ftp://ftp.x.org/pub/individual/driver/%{tarball}-%{version}.tar.bz2
 #Source0:    %{tarball}-%{gitdate}.tar.bz2
 Source1:    make-git-snapshot.sh
+
+Patch001:  evdev-2.0.4-reopen-device.patch
+Patch002:  evdev-2.0.4-cache-info.patch
 
 ExcludeArch: s390 s390x
 
@@ -31,6 +34,9 @@ X.Org X11 evdev input driver.
 #%setup -q -n %{tarball}-%{gitdate}
 %setup -q -n %{tarball}-%{version}
 
+# apply patches
+%patch1 -p1 -b .reopen-device.patch
+%patch2 -p1 -b .cache-info.patch
 
 %build
 autoreconf -v --install || exit 1
@@ -55,6 +61,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man4/evdev.4*
 
 %changelog
+* Thu Aug 28 2008 Peter Hutterer <peter.hutterer@redhat.com> 2.0.4-2
+- evdev-2.0.4-reopen-device.patch: try to reopen devices if a read error
+  occurs on the fd.
+- evdev-2.0.4-cache-info.patch: cache device info to ensure reopened device
+  isn't different to previous one.
+
 * Mon Aug 25 2008 Peter Hutterer <peter.hutterer@redhat.com> 2.0.4-1
 - evdev 2.0.4
 
