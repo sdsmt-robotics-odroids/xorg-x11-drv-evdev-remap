@@ -1,25 +1,6 @@
-From 441a97c22933db462dd53e000d1cb269dab6e825 Mon Sep 17 00:00:00 2001
-From: Peter Hutterer <peter.hutterer@redhat.com>
-Date: Thu, 28 Aug 2008 10:29:26 +0930
-Subject: [PATCH] Cache device information and compare against info after re-open.
-
-This way we ensure that if the topology changes under us, we don't open a
-completely different device. If a device has changed, we disable it.
-(cherry picked from commit 3bb7d100570134058eb4c906d4902c655148a8be)
-
-Conflicts:
-
-	src/evdev.c
-	src/evdev.h
----
- src/evdev.c |  131 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++---
- src/evdev.h |   12 +++++
- 2 files changed, 137 insertions(+), 6 deletions(-)
-
-diff --git a/src/evdev.c b/src/evdev.c
-index 16cf67f..ca6da6e 100644
---- a/src/evdev.c
-+++ b/src/evdev.c
+diff -up xf86-input-evdev-2.0.4/src/evdev.c.jx xf86-input-evdev-2.0.4/src/evdev.c
+--- xf86-input-evdev-2.0.4/src/evdev.c.jx	2008-09-12 16:04:34.000000000 -0400
++++ xf86-input-evdev-2.0.4/src/evdev.c	2008-09-12 16:04:56.000000000 -0400
 @@ -98,6 +98,7 @@ static const char *evdevDefaults[] = {
  };
  
@@ -28,7 +9,7 @@ index 16cf67f..ca6da6e 100644
  
  static void
  SetXkbOption(InputInfoPtr pInfo, char *name, char **option)
-@@ -176,11 +177,19 @@ EvdevReopenTimer(OsTimerPtr timer, CARD32 time, pointer arg)
+@@ -176,12 +177,19 @@ EvdevReopenTimer(OsTimerPtr timer, CARD3
  
      if (pInfo->fd != -1)
      {
@@ -36,8 +17,8 @@ index 16cf67f..ca6da6e 100644
 -                pEvdev->reopen_attempts - pEvdev->reopen_left);
 -
          pEvdev->reopen_left = 0;
+ 	pEvdev->reopen_timer = NULL;
 -        EvdevOn(pInfo->dev);
-+
 +        if (EvdevCacheCompare(pInfo, TRUE) == Success)
 +        {
 +            xf86Msg(X_INFO, "%s: Device reopened after %d attempts.\n", pInfo->name,
@@ -52,7 +33,7 @@ index 16cf67f..ca6da6e 100644
          return 0;
      }
  
-@@ -368,8 +377,6 @@ EvdevReadInput(InputInfoPtr pInfo)
+@@ -370,8 +378,6 @@ EvdevReadInput(InputInfoPtr pInfo)
      }
  }
  
@@ -61,7 +42,7 @@ index 16cf67f..ca6da6e 100644
  #define TestBit(bit, array) (array[(bit) / LONG_BITS]) & (1 << ((bit) % LONG_BITS))
  
  static void
-@@ -994,6 +1001,116 @@ EvdevConvert(InputInfoPtr pInfo, int first, int num, int v0, int v1, int v2,
+@@ -1000,6 +1006,116 @@ EvdevConvert(InputInfoPtr pInfo, int fir
      return TRUE;
  }
  
@@ -178,7 +159,7 @@ index 16cf67f..ca6da6e 100644
  static int
  EvdevProbe(InputInfoPtr pInfo)
  {
-@@ -1173,6 +1290,8 @@ EvdevPreInit(InputDriverPtr drv, IDevPtr dev, int flags)
+@@ -1179,6 +1295,8 @@ EvdevPreInit(InputDriverPtr drv, IDevPtr
          return NULL;
      }
  
@@ -187,10 +168,9 @@ index 16cf67f..ca6da6e 100644
      return pInfo;
  }
  
-diff --git a/src/evdev.h b/src/evdev.h
-index 0f8cf4b..47bbff2 100644
---- a/src/evdev.h
-+++ b/src/evdev.h
+diff -up xf86-input-evdev-2.0.4/src/evdev.h.jx xf86-input-evdev-2.0.4/src/evdev.h
+--- xf86-input-evdev-2.0.4/src/evdev.h.jx	2008-09-12 16:04:34.000000000 -0400
++++ xf86-input-evdev-2.0.4/src/evdev.h	2008-09-12 16:04:56.000000000 -0400
 @@ -40,6 +40,9 @@
  #include <X11/extensions/XKBstr.h>
  #endif
@@ -201,10 +181,10 @@ index 0f8cf4b..47bbff2 100644
  typedef struct {
      const char *device;
      int kernel24;
-@@ -71,6 +74,15 @@ typedef struct {
- 
+@@ -72,6 +75,15 @@ typedef struct {
      int reopen_attempts; /* max attempts to re-open after read failure */
      int reopen_left;     /* number of attempts left to re-open the device */
+     OsTimerPtr reopen_timer;
 +
 +    /* Cached info from device. */
 +    char name[1024];
@@ -217,6 +197,3 @@ index 0f8cf4b..47bbff2 100644
  } EvdevRec, *EvdevPtr;
  
  /* Middle Button emulation */
--- 
-1.5.6.4
-

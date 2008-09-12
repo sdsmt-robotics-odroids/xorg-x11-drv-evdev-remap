@@ -7,7 +7,7 @@
 Summary:    Xorg X11 evdev input driver
 Name:	    xorg-x11-drv-evdev
 Version:    2.0.4
-Release:    2%{?dist}
+Release:    3%{?dist}
 URL:	    http://www.x.org
 License:    MIT
 Group:	    User Interface/X Hardware Support
@@ -35,8 +35,8 @@ X.Org X11 evdev input driver.
 %setup -q -n %{tarball}-%{version}
 
 # apply patches
-%patch1 -p1 -b .reopen-device.patch
-%patch2 -p1 -b .cache-info.patch
+%patch1 -p1 -b .reopen-device
+%patch2 -p1 -b .cache-info
 
 %build
 autoreconf -v --install || exit 1
@@ -61,6 +61,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man4/evdev.4*
 
 %changelog
+* Fri Sep 12 2008 Adam Jackson <ajax@redhat.com> 2.0.4-3
+- evdev-2.0.4-reopen-device.patch: When arming the reopen timer, stash it in
+  the driver private, and explicitly cancel it if the server decides to
+  close the device for real.
+- evdev-2.0.4-cache-info.patch: Rebase to account for same.
+
 * Thu Aug 28 2008 Peter Hutterer <peter.hutterer@redhat.com> 2.0.4-2
 - evdev-2.0.4-reopen-device.patch: try to reopen devices if a read error
   occurs on the fd.
