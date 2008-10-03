@@ -6,8 +6,8 @@
 
 Summary:    Xorg X11 evdev input driver
 Name:	    xorg-x11-drv-evdev
-Version:    2.0.4
-Release:    3%{?dist}
+Version:    2.0.6
+Release:    1%{?dist}
 URL:	    http://www.x.org
 License:    MIT
 Group:	    User Interface/X Hardware Support
@@ -16,9 +16,6 @@ BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Source0:   ftp://ftp.x.org/pub/individual/driver/%{tarball}-%{version}.tar.bz2
 #Source0:    %{tarball}-%{gitdate}.tar.bz2
 Source1:    make-git-snapshot.sh
-
-Patch001:  evdev-2.0.4-reopen-device.patch
-Patch002:  evdev-2.0.4-cache-info.patch
 
 ExcludeArch: s390 s390x
 
@@ -35,8 +32,6 @@ X.Org X11 evdev input driver.
 %setup -q -n %{tarball}-%{version}
 
 # apply patches
-%patch1 -p1 -b .reopen-device
-%patch2 -p1 -b .cache-info
 
 %build
 autoreconf -v --install || exit 1
@@ -61,6 +56,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man4/evdev.4*
 
 %changelog
+* Fri Oct 3 2008 Peter Hutterer <peter.hutterer@redhat.com> 2.0.6-1
+- update to 2.0.6
+- remove patches merged upstream.
+
 * Fri Sep 12 2008 Adam Jackson <ajax@redhat.com> 2.0.4-3
 - evdev-2.0.4-reopen-device.patch: When arming the reopen timer, stash it in
   the driver private, and explicitly cancel it if the server decides to
