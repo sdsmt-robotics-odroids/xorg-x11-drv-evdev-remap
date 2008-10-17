@@ -6,21 +6,22 @@
 
 Summary:    Xorg X11 evdev input driver
 Name:	    xorg-x11-drv-evdev
-Version:    2.0.99
-Release:    0.1%{?dist}
+Version:    2.0.99.1
+Release:    1%{?dist}
 URL:	    http://www.x.org
 License:    MIT
 Group:	    User Interface/X Hardware Support
 BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-#Source0:   ftp://ftp.x.org/pub/individual/driver/%{tarball}-%{version}.tar.bz2
-Source0:    %{tarball}-%{gitdate}.tar.bz2
-Source1:    make-git-snapshot.sh
+Source0:   ftp://ftp.x.org/pub/individual/driver/%{tarball}-%{version}.tar.bz2
+#Source0:    %{tarball}-%{gitdate}.tar.bz2
+#Source1:    make-git-snapshot.sh
 
 ExcludeArch: s390 s390x
 
 BuildRequires: autoconf automake libtool
 BuildRequires: xorg-x11-server-sdk >= 1.3.0.0-6
+BuildRequires: libxkbfile-devel
 
 Requires:  xorg-x11-server-Xorg >= 1.3.0.0-6
 Requires:  xkeyboard-config >= 1.4-1
@@ -29,8 +30,8 @@ Requires:  xkeyboard-config >= 1.4-1
 X.Org X11 evdev input driver.
 
 %prep
-%setup -q -n %{tarball}-%{gitdate}
-#%setup -q -n %{tarball}-%{version}
+#%setup -q -n %{tarball}-%{gitdate}
+%setup -q -n %{tarball}-%{version}
 
 # apply patches
 
@@ -71,6 +72,10 @@ X.Org X11 evdev input driver development files.
 
 
 %changelog
+* Fri Oct 17 2008 Peter Hutterer <peter.hutterer@redhat.com> 2.0.99.1-1
+- evdev 2.0.99.1 (evdev 2.1 RC 1)
+- Upstream change now requires libxkbfile-devel to build.
+
 * Mon Oct 13 2008 Peter Hutterer <peter.hutterer@redhat.com> 2.0.99-1
 - Today's git snapshot.
 - Require xkeyboard-config 1.4 and higher for evdev ruleset.
