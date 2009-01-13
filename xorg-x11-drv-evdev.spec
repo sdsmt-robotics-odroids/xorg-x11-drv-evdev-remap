@@ -6,8 +6,8 @@
 
 Summary:    Xorg X11 evdev input driver
 Name:	    xorg-x11-drv-evdev
-Version:    2.1.0
-Release:    3%{?dist}
+Version:    2.1.1
+Release:    1%{?dist}
 URL:	    http://www.x.org
 License:    MIT
 Group:	    User Interface/X Hardware Support
@@ -20,10 +20,10 @@ Source0:   ftp://ftp.x.org/pub/individual/driver/%{tarball}-%{version}.tar.bz2
 ExcludeArch: s390 s390x
 
 BuildRequires: autoconf automake libtool
-BuildRequires: xorg-x11-server-sdk >= 1.3.0.0-6
+BuildRequires: xorg-x11-server-sdk >= 1.5.99.1
 BuildRequires: libxkbfile-devel
 
-Requires:  xorg-x11-server-Xorg >= 1.3.0.0-6
+Requires:  xorg-x11-server-Xorg >= 1.5.99.1
 Requires:  xkeyboard-config >= 1.4-1
 
 %description 
@@ -72,6 +72,10 @@ X.Org X11 evdev input driver development files.
 
 
 %changelog
+* Tue Jan 13 2009 Peter Hutterer <peter.hutterer@redhat.com> 2.1.1-1
+- evdev 2.1.1
+- update Requires to 1.5.99.1 to make sure the ABI is right.
+
 * Mon Dec 22 2008 Dave Airlie <airlied@redhat.com> 2.1.0-3
 - Rebuild again - latest tag wasn't in buildroot
 
