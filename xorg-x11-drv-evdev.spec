@@ -72,6 +72,9 @@ X.Org X11 evdev input driver development files.
 
 
 %changelog
+* Thu Feb 19 2009 Peter Hutterer <peter.hutterer@redhat.com>
+- purge obsolete patches.
+
 * Tue Feb 17 2009 Peter Hutterer <peter.hutterer@redhat.com> 2.1.3-1
 - evdev 2.1.3
 
