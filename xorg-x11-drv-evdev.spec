@@ -2,20 +2,20 @@
 %define moduledir %(pkg-config xorg-server --variable=moduledir )
 %define driverdir	%{moduledir}/input
 
-%define gitdate 20081013
+%define gitdate 20090219
 
 Summary:    Xorg X11 evdev input driver
 Name:	    xorg-x11-drv-evdev
-Version:    2.1.3
-Release:    1%{?dist}
+Version:    2.1.99
+Release:    1.%{gitdate}%{?dist}
 URL:	    http://www.x.org
 License:    MIT
 Group:	    User Interface/X Hardware Support
 BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-Source0:   ftp://ftp.x.org/pub/individual/driver/%{tarball}-%{version}.tar.bz2
-#Source0:    %{tarball}-%{gitdate}.tar.bz2
-#Source1:    make-git-snapshot.sh
+#Source0:   ftp://ftp.x.org/pub/individual/driver/%{tarball}-%{version}.tar.bz2
+Source0:    %{tarball}-%{gitdate}.tar.bz2
+Source1:    make-git-snapshot.sh
 
 ExcludeArch: s390 s390x
 
@@ -30,8 +30,8 @@ Requires:  xkeyboard-config >= 1.4-1
 X.Org X11 evdev input driver.
 
 %prep
-#%setup -q -n %{tarball}-%{gitdate}
-%setup -q -n %{tarball}-%{version}
+%setup -q -n %{tarball}-%{gitdate}
+#%setup -q -n %{tarball}-%{version}
 
 # apply patches
 
@@ -72,6 +72,9 @@ X.Org X11 evdev input driver development files.
 
 
 %changelog
+* Thu Feb 19 2009 Peter Hutterer <peter.hutterer@redhat.com> 2.1.99-1.20090219
+- Update to today's git master.
+
 * Thu Feb 19 2009 Peter Hutterer <peter.hutterer@redhat.com>
 - purge obsolete patches.
 
