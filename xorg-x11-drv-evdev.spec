@@ -6,16 +6,16 @@
 
 Summary:    Xorg X11 evdev input driver
 Name:	    xorg-x11-drv-evdev
-Version:    2.1.99
-Release:    1.%{gitdate}%{?dist}
+Version:    2.1.99.1
+Release:    1%{?dist}
 URL:	    http://www.x.org
 License:    MIT
 Group:	    User Interface/X Hardware Support
 BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-#Source0:   ftp://ftp.x.org/pub/individual/driver/%{tarball}-%{version}.tar.bz2
-Source0:    %{tarball}-%{gitdate}.tar.bz2
-Source1:    make-git-snapshot.sh
+Source0:   ftp://ftp.x.org/pub/individual/driver/%{tarball}-%{version}.tar.bz2
+#Source0:    %{tarball}-%{gitdate}.tar.bz2
+#Source1:    make-git-snapshot.sh
 
 ExcludeArch: s390 s390x
 
@@ -30,8 +30,8 @@ Requires:  xkeyboard-config >= 1.4-1
 X.Org X11 evdev input driver.
 
 %prep
-%setup -q -n %{tarball}-%{gitdate}
-#%setup -q -n %{tarball}-%{version}
+#%setup -q -n %{tarball}-%{gitdate}
+%setup -q -n %{tarball}-%{version}
 
 # apply patches
 
@@ -72,6 +72,9 @@ X.Org X11 evdev input driver development files.
 
 
 %changelog
+* Mon Mar 02 2009 Peter Hutterer <peter.hutterer@redhat.com> 2.1.99.1-1
+- evdev 2.2 snapshot 1
+
 * Thu Feb 26 2009 Peter Hutterer <peter.hutterer@redhat.com> 2.1.99.2.20090226
 - Update to today's git master.
 
