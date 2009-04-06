@@ -1,0 +1,29 @@
+From 98ecb5233bb3b899bd696a90d2733c6a345676dd Mon Sep 17 00:00:00 2001
+From: Peter Hutterer <peter.hutterer@who-t.net>
+Date: Mon, 6 Apr 2009 10:22:25 +1000
+Subject: [PATCH] Trigger read error handling if len is <= 0.
+
+Red Hat Bug 494245 <https://bugzilla.redhat.com/show_bug.cgi?id=494245>
+
+Reported-by: David Woodhouse <dwmw2@infradead.org>
+Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+---
+ src/evdev.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/src/evdev.c b/src/evdev.c
+index f65359f..43a90be 100644
+--- a/src/evdev.c
++++ b/src/evdev.c
+@@ -565,7 +565,7 @@ EvdevReadInput(InputInfoPtr pInfo)
+     while (len == sizeof(ev))
+     {
+         len = read(pInfo->fd, &ev, sizeof(ev));
+-        if (len == 0)
++        if (len <= 0)
+         {
+             if (errno == ENODEV) /* May happen after resume */
+             {
+-- 
+1.6.0.6
+
