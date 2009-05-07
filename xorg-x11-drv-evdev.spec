@@ -6,8 +6,8 @@
 
 Summary:    Xorg X11 evdev input driver
 Name:	    xorg-x11-drv-evdev
-Version:    2.2.1
-Release:    2%{?dist}
+Version:    2.2.2
+Release:    1%{?dist}
 URL:	    http://www.x.org
 License:    MIT
 Group:	    User Interface/X Hardware Support
@@ -16,8 +16,6 @@ BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Source0:   ftp://ftp.x.org/pub/individual/driver/%{tarball}-%{version}.tar.bz2
 #Source0:    %{tarball}-%{gitdate}.tar.bz2
 #Source1:    make-git-snapshot.sh
-
-Patch1:     evdev-2.2.1-read-deadlock.patch
 
 ExcludeArch: s390 s390x
 
@@ -34,9 +32,6 @@ X.Org X11 evdev input driver.
 %prep
 #%setup -q -n %{tarball}-%{gitdate}
 %setup -q -n %{tarball}-%{version}
-
-# apply patches
-%patch1 -p1 -b .read-deadlock
 
 %build
 autoreconf -v --install || exit 1
@@ -75,6 +70,9 @@ X.Org X11 evdev input driver development files.
 
 
 %changelog
+* Thu May 07 2009 Peter Hutterer <peter.hutterer@redhat.com> 2.2.2-1
+- evdev 2.2.2
+
 * Mon Apr 06 2009 Peter Hutterer <peter.hutterer@redhat.com> 2.2.1-2
 - evdev-2.2.1-read-deadlock.patch: handle read errors on len <= 0 (#494245)
 
