@@ -2,12 +2,12 @@
 %define moduledir %(pkg-config xorg-server --variable=moduledir )
 %define driverdir	%{moduledir}/input
 
-%define gitdate 20090619
+%define gitdate 20090629
 
 Summary:    Xorg X11 evdev input driver
 Name:	    xorg-x11-drv-evdev
 Version:    2.2.99
-Release:    2.%{gitdate}%{?dist}
+Release:    1.%{gitdate}%{?dist}
 URL:	    http://www.x.org
 License:    MIT
 Group:	    User Interface/X Hardware Support
@@ -16,6 +16,7 @@ BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 #Source0:   ftp://ftp.x.org/pub/individual/driver/%{tarball}-%{version}.tar.bz2
 Source0:    %{tarball}-%{gitdate}.tar.bz2
 Source1:    make-git-snapshot.sh
+Source2:    commitid
 
 ExcludeArch: s390 s390x
 
@@ -70,6 +71,10 @@ X.Org X11 evdev input driver development files.
 
 
 %changelog
+* Mon Jun 29 2009 Peter Hutterer <peter.hutterer@redhat.com> 2.2.99-1.20090629
+- Update to today's git master
+- Add commitid file with git's sha1.
+
 * Fri Jun 19 2009 Peter Hutterer <peter.hutterer@redhat.com> 2.2.99-2.20090619
 - rebuild for server ABI 7
 
