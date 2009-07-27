@@ -7,7 +7,7 @@
 Summary:    Xorg X11 evdev input driver
 Name:	    xorg-x11-drv-evdev
 Version:    2.2.99
-Release:    3.%{gitdate}%{?dist}.1
+Release:    4.%{gitdate}%{?dist}.1
 URL:	    http://www.x.org
 License:    MIT
 Group:	    User Interface/X Hardware Support
@@ -71,6 +71,9 @@ X.Org X11 evdev input driver development files.
 
 
 %changelog
+* Mon Jul 27 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.2.99-4.20090629.1
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
+
 * Wed Jul 15 2009 Adam Jackson <ajax@redhat.com> - 2.2.99-3.20090629.1
 - ABI bump
 
