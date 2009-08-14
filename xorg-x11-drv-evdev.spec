@@ -2,12 +2,12 @@
 %define moduledir %(pkg-config xorg-server --variable=moduledir )
 %define driverdir	%{moduledir}/input
 
-%define gitdate 20090730
+%define gitdate 20090814
 
 Summary:    Xorg X11 evdev input driver
 Name:	    xorg-x11-drv-evdev
 Version:    2.2.99
-Release:    5.%{gitdate}%{?dist}
+Release:    6.%{gitdate}%{?dist}
 URL:	    http://www.x.org
 License:    MIT
 Group:	    User Interface/X Hardware Support
@@ -71,6 +71,9 @@ X.Org X11 evdev input driver development files.
 
 
 %changelog
+* Fri Aug 14 2009 Peter Hutterer <peter.hutterer@redhat.com> 2.2.99-6.20090814
+- Update to today's git master
+
 * Thu Jul 30 2009 Peter Hutterer <peter.hutterer@redhat.com> 2.2.99-5.20090730
 - Update to today's git master
 
