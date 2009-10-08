@@ -2,19 +2,19 @@
 %define moduledir %(pkg-config xorg-server --variable=moduledir )
 %define driverdir	%{moduledir}/input
 
-%define gitdate 20090923
+#define gitdate 20090923
 
 Summary:    Xorg X11 evdev input driver
 Name:	    xorg-x11-drv-evdev
-Version:    2.2.99
-Release:    8.%{gitdate}%{?dist}
+Version:    2.2.99.2
+Release:    1%{?dist}
 URL:	    http://www.x.org
 License:    MIT
 Group:	    User Interface/X Hardware Support
 BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-#Source0:   ftp://ftp.x.org/pub/individual/driver/%{tarball}-%{version}.tar.bz2
-Source0:    %{tarball}-%{gitdate}.tar.bz2
+Source0:   ftp://ftp.x.org/pub/individual/driver/%{tarball}-%{version}.tar.bz2
+#Source0:    %{tarball}-%{gitdate}.tar.bz2
 Source1:    make-git-snapshot.sh
 Source2:    commitid
 
@@ -31,8 +31,8 @@ Requires:  xkeyboard-config >= 1.4-1
 X.Org X11 evdev input driver.
 
 %prep
-%setup -q -n %{tarball}-%{gitdate}
-#%setup -q -n %{tarball}-%{version}
+#%setup -q -n %{tarball}-%{gitdate}
+%setup -q -n %{tarball}-%{version}
 
 %build
 autoreconf -v --install || exit 1
@@ -71,6 +71,9 @@ X.Org X11 evdev input driver development files.
 
 
 %changelog
+* Thu Oct 08 2009 Peter Hutterer <peter.hutterer@redhat.com> 2.2.99.2-1
+- evdev 2.2.99.2
+
 * Wed Sep 23 2009 Peter Hutterer <peter.hutterer@redhat.com> 2.2.99-8.20090923
 - Update to today's git master (fixes wheel emulation)
 
