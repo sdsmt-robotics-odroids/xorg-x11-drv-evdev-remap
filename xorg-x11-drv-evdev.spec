@@ -1,16 +1,16 @@
-%define tarball xf86-input-evdev
-%define moduledir %(pkg-config xorg-server --variable=moduledir )
-%define driverdir	%{moduledir}/input
+%global tarball xf86-input-evdev
+%global moduledir %(pkg-config xorg-server --variable=moduledir )
+%global driverdir %{moduledir}/input
 
 #define gitdate 20090923
 
 Summary:    Xorg X11 evdev input driver
-Name:	    xorg-x11-drv-evdev
-Version:    2.2.99.2
+Name:       xorg-x11-drv-evdev
+Version:    2.3.0
 Release:    1%{?dist}
-URL:	    http://www.x.org
+URL:        http://www.x.org
 License:    MIT
-Group:	    User Interface/X Hardware Support
+Group:      User Interface/X Hardware Support
 BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Source0:   ftp://ftp.x.org/pub/individual/driver/%{tarball}-%{version}.tar.bz2
@@ -23,11 +23,12 @@ ExcludeArch: s390 s390x
 BuildRequires: autoconf automake libtool
 BuildRequires: xorg-x11-server-sdk >= 1.5.99.1
 BuildRequires: libxkbfile-devel
+BuildRequires: xorg-x11-util-macros >= 1.3.0
 
 Requires:  xorg-x11-server-Xorg >= 1.5.99.1
 Requires:  xkeyboard-config >= 1.4-1
 
-%description 
+%description
 X.Org X11 evdev input driver.
 
 %prep
@@ -59,7 +60,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %package devel
 Summary:    Xorg X11 evdev input driver development package.
-Group:	    Development/Libraries
+Group:      Development/Libraries
 %description devel
 X.Org X11 evdev input driver development files.
 
@@ -71,6 +72,12 @@ X.Org X11 evdev input driver development files.
 
 
 %changelog
+* Wed Jan 06 2010 Peter Hutterer <peter.hutterer@redhat.com> 2.3.0-1
+- evdev 2.3.0
+- BuildRequires xorg-x11-util-macros 1.3.0
+- Fix tab/spaces mix in spec file.
+- Use global instead of define.
+
 * Thu Oct 08 2009 Peter Hutterer <peter.hutterer@redhat.com> 2.2.99.2-1
 - evdev 2.2.99.2
 
