@@ -2,19 +2,19 @@
 %global moduledir %(pkg-config xorg-server --variable=moduledir )
 %global driverdir %{moduledir}/input
 
-#define gitdate 20090923
+%global gitdate 20100108
 
 Summary:    Xorg X11 evdev input driver
 Name:       xorg-x11-drv-evdev
-Version:    2.3.0
-Release:    1%{?dist}
+Version:    2.3.99
+Release:    1.%{?gitdate}%{?dist}
 URL:        http://www.x.org
 License:    MIT
 Group:      User Interface/X Hardware Support
 BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-Source0:   ftp://ftp.x.org/pub/individual/driver/%{tarball}-%{version}.tar.bz2
-#Source0:    %{tarball}-%{gitdate}.tar.bz2
+#Source0:   ftp://ftp.x.org/pub/individual/driver/%{tarball}-%{version}.tar.bz2
+Source0:    %{tarball}-%{gitdate}.tar.bz2
 Source1:    make-git-snapshot.sh
 Source2:    commitid
 
@@ -32,8 +32,8 @@ Requires:  xkeyboard-config >= 1.4-1
 X.Org X11 evdev input driver.
 
 %prep
-#%setup -q -n %{tarball}-%{gitdate}
-%setup -q -n %{tarball}-%{version}
+%setup -q -n %{tarball}-%{gitdate}
+#%setup -q -n %{tarball}-%{version}
 
 %build
 autoreconf -v --install || exit 1
@@ -72,6 +72,9 @@ X.Org X11 evdev input driver development files.
 
 
 %changelog
+* Fri Jan 08 2010 Peter Hutterer <peter.hutterer@redhat.com> 2.3.99-1.20100108
+- Update to current git
+
 * Wed Jan 06 2010 Peter Hutterer <peter.hutterer@redhat.com> 2.3.0-1
 - evdev 2.3.0
 - BuildRequires xorg-x11-util-macros 1.3.0
