@@ -7,7 +7,7 @@
 Summary:    Xorg X11 evdev input driver
 Name:       xorg-x11-drv-evdev
 Version:    2.4.0
-Release:    2.%{?gitdate}%{?dist}
+Release:    3.%{?gitdate}%{?dist}
 URL:        http://www.x.org
 License:    MIT
 Group:      User Interface/X Hardware Support
@@ -54,6 +54,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
+%doc COPYING
 %{driverdir}/evdev_drv.so
 %{_mandir}/man4/evdev.4*
 
@@ -66,12 +67,16 @@ X.Org X11 evdev input driver development files.
 
 %files devel
 %defattr(-,root,root,-)
+%doc COPYING
 %{_libdir}/pkgconfig/xorg-evdev.pc
 %dir %{_includedir}/xorg
 %{_includedir}/xorg/evdev-properties.h
 
 
 %changelog
+* Thu Jul 08 2010 Adam Jackson <ajax@redhat.com> 2.4.0-3
+- Package COPYING.
+
 * Mon Jul 05 2010 Peter Hutterer <peter.hutterer@redhat.com> - 2.4.0-2.20100406
 - rebuild for X Server 1.9
 
