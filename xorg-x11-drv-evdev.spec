@@ -7,11 +7,10 @@
 Summary:    Xorg X11 evdev input driver
 Name:       xorg-x11-drv-evdev
 Version:    2.5.0
-Release:    1%{?gitdate:.%{gitdate}}%{dist}
+Release:    2%{?gitdate:.%{gitdate}}%{dist}
 URL:        http://www.x.org
 License:    MIT
 Group:      User Interface/X Hardware Support
-BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 %if 0%{?gitdate}
 Source0:    %{tarball}-%{gitdate}.tar.bz2
@@ -28,7 +27,8 @@ BuildRequires: xorg-x11-server-sdk >= 1.5.99.1
 BuildRequires: libxkbfile-devel
 BuildRequires: xorg-x11-util-macros >= 1.3.0
 
-Requires:  xorg-x11-server-Xorg >= 1.5.99.1
+Requires: Xorg %(xserver-sdk-abi-requires ansic)
+Requires: Xorg %(xserver-sdk-abi-requires xinput)
 Requires:  xkeyboard-config >= 1.4-1
 
 %description
@@ -76,6 +76,9 @@ X.Org X11 evdev input driver development files.
 
 
 %changelog
+* Wed Oct 27 2010 Adam Jackson <ajax@redhat.com> 2.5.0-2
+- Add ABI requires magic. (#542742)
+
 * Mon Aug 23 2010 Peter Hutterer <peter.hutterer@redhat.com> 2.5.0-1
 - evdev 2.5.0 from git
 
