@@ -2,13 +2,13 @@
 %global moduledir %(pkg-config xorg-server --variable=moduledir )
 %global driverdir %{moduledir}/input
 
-#global gitdate 20110105
-#global gitversion 540a4cce9
+%global gitdate 20110601
+%global gitversion eaf202531
 
 Summary:    Xorg X11 evdev input driver
 Name:       xorg-x11-drv-evdev
-Version:    2.6.0
-Release:    2%{?gitdate:.%{gitdate}git%{gitversion}}%{dist}
+Version:    2.6.99
+Release:    1%{?gitdate:.%{gitdate}git%{gitversion}}%{dist}
 URL:        http://www.x.org
 License:    MIT
 Group:      User Interface/X Hardware Support
@@ -77,6 +77,9 @@ X.Org X11 evdev input driver development files.
 
 
 %changelog
+* Wed Jun 01 2011 Peter Hutterer <peter.hutterer@redhat.com> 2.6.99-1.20110601giteaf202531
+- Today's snapshot from git
+
 * Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.6.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
 
