@@ -40,8 +40,8 @@ X.Org X11 evdev input driver.
 
 %build
 autoreconf -v --install || exit 1
-%configure --disable-static
-make
+%configure --disable-static --disable-silent-rules
+make %{?_smp_mflags}
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -77,6 +77,9 @@ X.Org X11 evdev input driver development files.
 
 
 %changelog
+* Thu Jul 07 2011 Peter Hutterer <peter.hutterer@redhat.com>
+- Build verbose, with smp_mflags
+
 * Wed Jun 01 2011 Peter Hutterer <peter.hutterer@redhat.com> 2.6.99-1.20110601giteaf202531
 - Today's snapshot from git
 
