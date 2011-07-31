@@ -8,7 +8,7 @@
 Summary:    Xorg X11 evdev input driver
 Name:       xorg-x11-drv-evdev
 Version:    2.6.99
-Release:    1%{?gitdate:.%{gitdate}git%{gitversion}}%{dist}
+Release:    2%{?gitdate:.%{gitdate}git%{gitversion}}%{dist}
 URL:        http://www.x.org
 License:    MIT
 Group:      User Interface/X Hardware Support
@@ -65,6 +65,7 @@ rm -rf $RPM_BUILD_ROOT
 %package devel
 Summary:    Xorg X11 evdev input driver development package.
 Group:      Development/Libraries
+Requires:   pkgconfig
 %description devel
 X.Org X11 evdev input driver development files.
 
@@ -77,6 +78,9 @@ X.Org X11 evdev input driver development files.
 
 
 %changelog
+* Mon Aug 01 2011 Peter Hutterer <peter.hutterer@redhat.com> 2.6.99-2.20110601giteaf202531
+- devel package requires pkg-config.
+
 * Thu Jul 07 2011 Peter Hutterer <peter.hutterer@redhat.com>
 - Build verbose, with smp_mflags
 
