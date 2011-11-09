@@ -2,13 +2,13 @@
 %global moduledir %(pkg-config xorg-server --variable=moduledir )
 %global driverdir %{moduledir}/input
 
-%global gitdate 20110601
-%global gitversion eaf202531
+%global gitdate 20111109
+%global gitversion 745fca03a
 
 Summary:    Xorg X11 evdev input driver
 Name:       xorg-x11-drv-evdev
 Version:    2.6.99
-Release:    3%{?gitdate:.%{gitdate}git%{gitversion}}%{dist}
+Release:    1%{?gitdate:.%{gitdate}git%{gitversion}}%{dist}
 URL:        http://www.x.org
 License:    MIT
 Group:      User Interface/X Hardware Support
@@ -78,6 +78,9 @@ X.Org X11 evdev input driver development files.
 
 
 %changelog
+* Wed Nov 09 2011 Peter Hutterer <peter.hutterer@redhat.com>  2.6.99-1.20111109git745fca03a
+- Today's git snapshot
+
 * Thu Aug 18 2011 Adam Jackson <ajax@redhat.com> - 2.6.99-3.20110601giteaf202531
 - Rebuild for xserver 1.11 ABI
 
