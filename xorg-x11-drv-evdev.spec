@@ -8,7 +8,7 @@
 Summary:    Xorg X11 evdev input driver
 Name:       xorg-x11-drv-evdev
 Version:    2.6.99.901
-Release:    2%{?gitdate:.%{gitdate}git%{gitversion}}%{dist}
+Release:    3%{?gitdate:.%{gitdate}git%{gitversion}}%{dist}
 URL:        http://www.x.org
 License:    MIT
 Group:      User Interface/X Hardware Support
@@ -25,12 +25,13 @@ ExcludeArch: s390 s390x
 
 BuildRequires: autoconf automake libtool
 BuildRequires: xorg-x11-server-sdk >= 1.10.99.902
-BuildRequires: libxkbfile-devel libudev-devel
+BuildRequires: libxkbfile-devel libudev-devel mtdev-devel
 BuildRequires: xorg-x11-util-macros >= 1.3.0
 
 Requires: Xorg %(xserver-sdk-abi-requires ansic)
 Requires: Xorg %(xserver-sdk-abi-requires xinput)
 Requires:  xkeyboard-config >= 1.4-1
+Requires: mtdev
 
 %description
 X.Org X11 evdev input driver.
@@ -78,6 +79,9 @@ X.Org X11 evdev input driver development files.
 
 
 %changelog
+* Wed Jan 04 2012 Peter Hutterer <peter.hutterer@redhat.com> 2.6.99.901-3.20120103git965338e9d
+- Add mtdev as dependency
+
 * Tue Jan 03 2012 Peter Hutterer <peter.hutterer@redhat.com> 2.6.99.901-2.20120103git965338e9d
 - Another snapshot, this time with the right udev dependency
 
