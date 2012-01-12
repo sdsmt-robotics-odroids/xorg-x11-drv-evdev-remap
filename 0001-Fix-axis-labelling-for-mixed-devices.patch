@@ -1,0 +1,70 @@
+From be53e80fafbc1474f07737fa5817275ad79d9323 Mon Sep 17 00:00:00 2001
+From: Peter Hutterer <peter.hutterer@who-t.net>
+Date: Thu, 12 Jan 2012 11:01:22 +1000
+Subject: [PATCH] Fix axis labelling for mixed devices.
+
+If a device has both relative and absolute axes, we'd initialise the
+relative axes but label them with the absolute labels.
+Fix this by properly unsetting the flags before we initialise the axes and
+then restoring them on failure.
+
+Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+---
+ src/evdev.c |   15 ++++++++++++---
+ 1 files changed, 12 insertions(+), 3 deletions(-)
+
+diff --git a/src/evdev.c b/src/evdev.c
+index 989a255..86a9e55 100644
+--- a/src/evdev.c
++++ b/src/evdev.c
+@@ -1628,12 +1628,18 @@ static void
+ EvdevInitAbsValuators(DeviceIntPtr device, EvdevPtr pEvdev)
+ {
+     InputInfoPtr pInfo = device->public.devicePrivate;
++    int has_rel_axes = pEvdev->flags & EVDEV_RELATIVE_EVENTS;
++
++    pEvdev->flags &= ~EVDEV_RELATIVE_EVENTS;
+ 
+     if (EvdevAddAbsValuatorClass(device) == Success) {
+         xf86IDrvMsg(pInfo, X_INFO,"initialized for absolute axes.\n");
+     } else {
+         xf86IDrvMsg(pInfo, X_ERROR,"failed to initialize for absolute axes.\n");
+         pEvdev->flags &= ~EVDEV_ABSOLUTE_EVENTS;
++
++        if (has_rel_axes)
++            pEvdev->flags |= EVDEV_RELATIVE_EVENTS;
+     }
+ }
+ 
+@@ -1643,14 +1649,14 @@ EvdevInitRelValuators(DeviceIntPtr device, EvdevPtr pEvdev)
+     InputInfoPtr pInfo = device->public.devicePrivate;
+     int has_abs_axes = pEvdev->flags & EVDEV_ABSOLUTE_EVENTS;
+ 
++    pEvdev->flags &= ~EVDEV_ABSOLUTE_EVENTS;
++
+     if (EvdevAddRelValuatorClass(device) == Success) {
+ 
+         xf86IDrvMsg(pInfo, X_INFO,"initialized for relative axes.\n");
+ 
+-        if (has_abs_axes) {
++        if (has_abs_axes)
+             xf86IDrvMsg(pInfo, X_WARNING,"ignoring absolute axes.\n");
+-            pEvdev->flags &= ~EVDEV_ABSOLUTE_EVENTS;
+-        }
+ 
+     } else {
+         xf86IDrvMsg(pInfo, X_ERROR,"failed to initialize for relative axes.\n");
+@@ -1658,7 +1664,10 @@ EvdevInitRelValuators(DeviceIntPtr device, EvdevPtr pEvdev)
+         pEvdev->flags &= ~EVDEV_RELATIVE_EVENTS;
+ 
+         if (has_abs_axes)
++        {
++            pEvdev->flags |= EVDEV_ABSOLUTE_EVENTS;
+             EvdevInitAbsValuators(device, pEvdev);
++        }
+     }
+ }
+ 
+-- 
+1.7.7.5
+
