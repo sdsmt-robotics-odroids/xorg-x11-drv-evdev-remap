@@ -2,13 +2,13 @@
 %global moduledir %(pkg-config xorg-server --variable=moduledir )
 %global driverdir %{moduledir}/input
 
-%global gitdate 20120103
-%global gitversion 965338e9d
+%global gitdate 20120118
+%global gitversion 9d9c9870c
 
 Summary:    Xorg X11 evdev input driver
 Name:       xorg-x11-drv-evdev
 Version:    2.6.99.901
-Release:    4%{?gitdate:.%{gitdate}git%{gitversion}}%{dist}
+Release:    5%{?gitdate:.%{gitdate}git%{gitversion}}%{dist}
 URL:        http://www.x.org
 License:    MIT
 Group:      User Interface/X Hardware Support
@@ -20,9 +20,6 @@ Source2:    commitid
 %else
 Source0:    ftp://ftp.x.org/pub/individual/driver/%{tarball}-%{version}.tar.bz2
 %endif
-
-Patch01: 0001-Fix-axis-labelling-for-mixed-devices.patch
-Patch02: 0001-Force-REL_X-REL_Y-to-exist-on-devices-with-any-relat.patch
 
 ExcludeArch: s390 s390x
 
@@ -41,9 +38,6 @@ X.Org X11 evdev input driver.
 
 %prep
 %setup -q -n %{tarball}-%{?gitdate:%{gitdate}}%{!?gitdate:%{version}}
-
-%patch01 -p1
-%patch02 -p1
 
 %build
 autoreconf -v --install || exit 1
@@ -85,6 +79,9 @@ X.Org X11 evdev input driver development files.
 
 
 %changelog
+* Wed Jan 18 2012 Peter Hutterer <peter.hutterer@redhat.com> 2.6.99.901-5.20120118git9d9c9870c
+- Update to new git snapshot, includes the two patches now
+
 * Thu Jan 12 2012 Peter Hutterer <peter.hutterer@redhat.com> 2.6.99.901-4.20120103git965338e9d
 - Fix axis labelling and single-axis relative devices
 
