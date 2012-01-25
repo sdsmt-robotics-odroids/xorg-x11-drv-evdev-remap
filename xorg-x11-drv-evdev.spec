@@ -8,7 +8,7 @@
 Summary:    Xorg X11 evdev input driver
 Name:       xorg-x11-drv-evdev
 Version:    2.6.99.901
-Release:    6%{?gitdate:.%{gitdate}git%{gitversion}}%{dist}
+Release:    7%{?gitdate:.%{gitdate}git%{gitversion}}%{dist}
 URL:        http://www.x.org
 License:    MIT
 Group:      User Interface/X Hardware Support
@@ -20,6 +20,9 @@ Source2:    commitid
 %else
 Source0:    ftp://ftp.x.org/pub/individual/driver/%{tarball}-%{version}.tar.bz2
 %endif
+
+# Bug 784391 - 2.6.99.901-5 breaks mouse in F16 KVM guest
+Patch01: 0001-Only-force-REL_X-Y-if-no-ABS_X-Y-exists.patch
 
 ExcludeArch: s390 s390x
 
@@ -38,6 +41,7 @@ X.Org X11 evdev input driver.
 
 %prep
 %setup -q -n %{tarball}-%{?gitdate:%{gitdate}}%{!?gitdate:%{version}}
+%patch01 -p1
 
 %build
 autoreconf -v --install || exit 1
@@ -79,6 +83,9 @@ X.Org X11 evdev input driver development files.
 
 
 %changelog
+* Wed Jan 25 2012 Peter Hutterer <peter.hutterer@redhat.com> 2.6.99.901-7.20120118git9d9c9870c
+- only force relative x/y to exists if we don't have ABS_X/Y (#784391) 
+
 * Mon Jan 23 2012 Peter Hutterer <peter.hutterer@redhat.com> - 2.6.99.901-6.20120118git9d9c9870c
 - ABI rebuild
 
