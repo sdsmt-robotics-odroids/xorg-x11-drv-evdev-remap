@@ -8,7 +8,7 @@
 Summary:    Xorg X11 evdev input driver
 Name:       xorg-x11-drv-evdev
 Version:    2.6.99.901
-Release:    8%{?gitdate:.%{gitdate}git%{gitversion}}%{dist}
+Release:    9%{?gitdate:.%{gitdate}git%{gitversion}}%{dist}
 URL:        http://www.x.org
 License:    MIT
 Group:      User Interface/X Hardware Support
@@ -83,6 +83,9 @@ X.Org X11 evdev input driver development files.
 
 
 %changelog
+* Sat Feb 11 2012 Peter Hutterer <peter.hutterer@redhat.com> - 2.6.99.901-9.20120118git9d9c9870c
+- ABI rebuild
+
 * Fri Feb 10 2012 Peter Hutterer <peter.hutterer@redhat.com> - 2.6.99.901-8.20120118git9d9c9870c
 - ABI rebuild
 
