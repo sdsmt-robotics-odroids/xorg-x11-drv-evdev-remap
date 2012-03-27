@@ -8,7 +8,7 @@
 Summary:    Xorg X11 evdev input driver
 Name:       xorg-x11-drv-evdev
 Version:    2.7.0
-Release:    1%{?gitdate:.%{gitdate}git%{gitversion}}%{dist}
+Release:    2%{?gitdate:.%{gitdate}git%{gitversion}}%{dist}
 URL:        http://www.x.org
 License:    MIT
 Group:      User Interface/X Hardware Support
@@ -20,6 +20,10 @@ Source2:    commitid
 %else
 Source0:    ftp://ftp.x.org/pub/individual/driver/%{tarball}-%{version}.tar.bz2
 %endif
+
+Patch01: 0001-Fix-inverted-horizontal-scroll-46205.patch
+# Bug 805902 - Scrollwheels on tablets are broken
+Patch02: 0001-Allow-relative-scroll-valuators-on-absolute-devices.patch
 
 ExcludeArch: s390 s390x
 
@@ -38,6 +42,8 @@ X.Org X11 evdev input driver.
 
 %prep
 %setup -q -n %{tarball}-%{?gitdate:%{gitdate}}%{!?gitdate:%{version}}
+%patch01 -p1
+%patch02 -p1
 
 %build
 autoreconf -v --install || exit 1
@@ -79,6 +85,10 @@ X.Org X11 evdev input driver development files.
 
 
 %changelog
+* Tue Mar 27 2012 Peter Hutterer <peter.hutterer@redhat.com> 2.7.0-2
+- Fix inverted horizontal scroll
+- Fix broken scroll wheels on QEMU tablets (#805902)
+
 * Wed Mar 07 2012 Peter Hutterer <peter.hutterer@redhat.com> 2.7.0-1
 - evdev 2.7.0
 
