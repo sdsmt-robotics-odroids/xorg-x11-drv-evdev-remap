@@ -8,7 +8,7 @@
 Summary:    Xorg X11 evdev input driver
 Name:       xorg-x11-drv-evdev
 Version:    2.7.0
-Release:    3%{?gitdate:.%{gitdate}git%{gitversion}}%{dist}
+Release:    4%{?gitdate:.%{gitdate}git%{gitversion}}%{dist}
 URL:        http://www.x.org
 License:    MIT
 Group:      User Interface/X Hardware Support
@@ -24,6 +24,8 @@ Source0:    ftp://ftp.x.org/pub/individual/driver/%{tarball}-%{version}.tar.bz2
 Patch01: 0001-Fix-inverted-horizontal-scroll-46205.patch
 # Bug 805902 - Scrollwheels on tablets are broken
 Patch02: 0001-Allow-relative-scroll-valuators-on-absolute-devices.patch
+# Don't leak mtdev data
+Patch03: 0001-Release-mtdev-data-whenever-we-close-the-fd.patch
 
 ExcludeArch: s390 s390x %{?rhel:ppc ppc64}
 
@@ -85,6 +87,9 @@ X.Org X11 evdev input driver development files.
 
 
 %changelog
+* Wed Jul 04 2012 Peter Hutterer <peter.hutterer@redhat.com> 2.7.0-4
+- Don't leak mtdev data
+
 * Thu Apr 05 2012 Adam Jackson <ajax@redhat.com> - 2.7.0-3
 - RHEL arch exclude updates
 
