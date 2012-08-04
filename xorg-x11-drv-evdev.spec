@@ -8,7 +8,7 @@
 Summary:    Xorg X11 evdev input driver
 Name:       xorg-x11-drv-evdev
 Version:    2.7.2
-Release:    3%{?gitdate:.%{gitdate}git%{gitversion}}%{dist}
+Release:    4%{?gitdate:.%{gitdate}git%{gitversion}}%{dist}
 URL:        http://www.x.org
 License:    MIT
 Group:      User Interface/X Hardware Support
@@ -47,7 +47,7 @@ X.Org X11 evdev input driver.
 %patch03 -p1 -b .enodev
 
 %build
-autoreconf -v --install || exit 1
+autoreconf --force -v --install || exit 1
 %configure --disable-static --disable-silent-rules
 make %{?_smp_mflags}
 
@@ -86,6 +86,9 @@ X.Org X11 evdev input driver development files.
 
 
 %changelog
+* Sat Aug 04 2012 Peter Hutterer <peter.hutterer@redhat.com> 2.7.2-4
+- Force autoreconf to avoid spurious libtool errors
+
 * Sat Aug 04 2012 Peter Hutterer <peter.hutterer@redhat.com> 2.7.2-3
 - Don't delete the device on ENODEV to avoid free in signal handler
 
