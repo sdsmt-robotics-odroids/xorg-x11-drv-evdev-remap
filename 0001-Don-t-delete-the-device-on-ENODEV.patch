@@ -1,0 +1,38 @@
+From 1660f32f21ba1fa70fa79af1cb59436065a6ba8a Mon Sep 17 00:00:00 2001
+From: Peter Hutterer <peter.hutterer@who-t.net>
+Date: Tue, 31 Jul 2012 16:39:00 +1000
+Subject: [PATCH evdev] Don't delete the device on ENODEV
+
+This is signal handler code and we cannot clean up properly while in the
+signal handler. So reduce the code to removing the signal handler and let
+the device be cleaned up later.
+
+If hotplugging is on, the server will remove it when the config backend says
+so and if it is off, the server will remove it on shutdown.
+
+Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+---
+ src/evdev.c |    6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
+
+diff --git a/src/evdev.c b/src/evdev.c
+index f54b66f..b832d98 100644
+--- a/src/evdev.c
++++ b/src/evdev.c
+@@ -1113,12 +1113,8 @@ EvdevReadInput(InputInfoPtr pInfo)
+         if (len <= 0)
+         {
+             if (errno == ENODEV) /* May happen after resume */
+-            {
+-                EvdevMBEmuFinalize(pInfo);
+-                Evdev3BEmuFinalize(pInfo);
+                 xf86RemoveEnabledDevice(pInfo);
+-                EvdevCloseDevice(pInfo);
+-            } else if (errno != EAGAIN)
++            else if (errno != EAGAIN)
+             {
+                 /* We use X_NONE here because it doesn't alloc */
+                 xf86MsgVerb(X_NONE, 0, "%s: Read error: %s\n", pInfo->name,
+-- 
+1.7.10.4
+
