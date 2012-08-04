@@ -2,13 +2,13 @@
 %global moduledir %(pkg-config xorg-server --variable=moduledir )
 %global driverdir %{moduledir}/input
 
-%global gitdate 20120718
-%global gitversion f5ede9808
+#global gitdate 20120718
+#global gitversion f5ede9808
 
 Summary:    Xorg X11 evdev input driver
 Name:       xorg-x11-drv-evdev
-Version:    2.7.0
-Release:    6%{?gitdate:.%{gitdate}git%{gitversion}}%{dist}
+Version:    2.7.2
+Release:    1%{?gitdate:.%{gitdate}git%{gitversion}}%{dist}
 URL:        http://www.x.org
 License:    MIT
 Group:      User Interface/X Hardware Support
@@ -23,8 +23,6 @@ Source0:    ftp://ftp.x.org/pub/individual/driver/%{tarball}-%{version}.tar.bz2
 
 # Bug 805902 - Scrollwheels on tablets are broken
 Patch02: 0001-Allow-relative-scroll-valuators-on-absolute-devices.patch
-# Don't leak mtdev data
-Patch03: 0001-Release-mtdev-data-whenever-we-close-the-fd.patch
 
 ExcludeArch: s390 s390x %{?rhel:ppc ppc64}
 

@@ -1,7 +1,24 @@
-diff -up xf86-input-evdev-20120718/src/evdev.c.relscroll xf86-input-evdev-20120718/src/evdev.c
---- xf86-input-evdev-20120718/src/evdev.c.relscroll	2012-07-18 06:18:10.000000000 -0400
-+++ xf86-input-evdev-20120718/src/evdev.c	2012-07-18 06:24:06.951594145 -0400
-@@ -706,7 +706,9 @@ EvdevProcessRelativeMotionEvent(InputInf
+From 7f20a75e91bc5ffa203ed09f82834f0dd619efbe Mon Sep 17 00:00:00 2001
+From: Peter Hutterer <peter.hutterer@who-t.net>
+Date: Tue, 27 Mar 2012 12:18:46 +1000
+Subject: [PATCH evdev] Allow relative scroll valuators on absolute devices
+
+Special-case RHEL_WHEEL, RHEL_HWHEEL and REL_DIAL to add scroll valuators
+for those axes on top of the absolute axes.
+
+https://bugzilla.redhat.com/show_bug.cgi?id=805902
+
+Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+---
+ src/evdev.c |   89 +++++++++++++++++++++++++++++++++++++++++++++++++++++++----
+ src/evdev.h |    3 +-
+ 2 files changed, 86 insertions(+), 6 deletions(-)
+
+diff --git a/src/evdev.c b/src/evdev.c
+index fc7ba88..e7b4850 100644
+--- a/src/evdev.c
++++ b/src/evdev.c
+@@ -703,7 +703,9 @@ EvdevProcessRelativeMotionEvent(InputInfoPtr pInfo, struct input_event *ev)
  #endif
          default:
              /* Ignore EV_REL events if we never set up for them. */
@@ -12,7 +29,7 @@ diff -up xf86-input-evdev-20120718/src/evdev.c.relscroll xf86-input-evdev-201207
                  return;
  
              /* Handle mouse wheel emulation */
-@@ -715,7 +717,7 @@ EvdevProcessRelativeMotionEvent(InputInf
+@@ -712,7 +714,7 @@ EvdevProcessRelativeMotionEvent(InputInfoPtr pInfo, struct input_event *ev)
  
              pEvdev->rel_queued = 1;
              pEvdev->delta[ev->code] += value;
@@ -21,7 +38,7 @@ diff -up xf86-input-evdev-20120718/src/evdev.c.relscroll xf86-input-evdev-201207
              valuator_mask_set(pEvdev->vals, map, value);
              break;
      }
-@@ -1239,7 +1241,7 @@ is_blacklisted_axis(int axis)
+@@ -1236,7 +1238,7 @@ is_blacklisted_axis(int axis)
  
  
  static int
@@ -30,7 +47,7 @@ diff -up xf86-input-evdev-20120718/src/evdev.c.relscroll xf86-input-evdev-201207
  {
      InputInfoPtr pInfo;
      EvdevPtr pEvdev;
-@@ -1287,6 +1289,20 @@ EvdevAddAbsValuatorClass(DeviceIntPtr de
+@@ -1284,6 +1286,20 @@ EvdevAddAbsValuatorClass(DeviceIntPtr device)
          }
      }
  #endif
@@ -51,7 +68,7 @@ diff -up xf86-input-evdev-20120718/src/evdev.c.relscroll xf86-input-evdev-201207
      if (num_axes + num_mt_axes > MAX_VALUATORS) {
          xf86IDrvMsg(pInfo, X_WARNING, "found %d axes, limiting to %d.\n", num_axes, MAX_VALUATORS);
          num_axes = MAX_VALUATORS;
-@@ -1376,6 +1392,20 @@ EvdevAddAbsValuatorClass(DeviceIntPtr de
+@@ -1373,6 +1389,20 @@ EvdevAddAbsValuatorClass(DeviceIntPtr device)
              i++;
      }
  
@@ -72,7 +89,7 @@ diff -up xf86-input-evdev-20120718/src/evdev.c.relscroll xf86-input-evdev-201207
      EvdevInitAxesLabels(pEvdev, Absolute, pEvdev->num_vals + num_mt_axes, atoms);
  
      if (!InitValuatorClassDeviceStruct(device, num_axes + num_mt_axes, atoms,
-@@ -1470,6 +1500,51 @@ EvdevAddAbsValuatorClass(DeviceIntPtr de
+@@ -1467,6 +1497,51 @@ EvdevAddAbsValuatorClass(DeviceIntPtr device)
      }
  #endif
  
@@ -124,7 +141,7 @@ diff -up xf86-input-evdev-20120718/src/evdev.c.relscroll xf86-input-evdev-201207
      free(atoms);
  
      for (i = 0; i < ArrayLength(proximity_bits); i++)
-@@ -1699,12 +1774,16 @@ static void
+@@ -1696,12 +1771,16 @@ static void
  EvdevInitAnyValuators(DeviceIntPtr device, EvdevPtr pEvdev)
  {
      InputInfoPtr pInfo = device->public.devicePrivate;
@@ -142,7 +159,7 @@ diff -up xf86-input-evdev-20120718/src/evdev.c.relscroll xf86-input-evdev-201207
          xf86IDrvMsg(pInfo, X_INFO, "initialized for absolute axes.\n");
  }
  
-@@ -1713,7 +1792,7 @@ EvdevInitAbsValuators(DeviceIntPtr devic
+@@ -1710,7 +1789,7 @@ EvdevInitAbsValuators(DeviceIntPtr device, EvdevPtr pEvdev)
  {
      InputInfoPtr pInfo = device->public.devicePrivate;
  
@@ -151,9 +168,10 @@ diff -up xf86-input-evdev-20120718/src/evdev.c.relscroll xf86-input-evdev-201207
          xf86IDrvMsg(pInfo, X_INFO,"initialized for absolute axes.\n");
      } else {
          xf86IDrvMsg(pInfo, X_ERROR,"failed to initialize for absolute axes.\n");
-diff -up xf86-input-evdev-20120718/src/evdev.h.relscroll xf86-input-evdev-20120718/src/evdev.h
---- xf86-input-evdev-20120718/src/evdev.h.relscroll	2012-07-18 06:18:10.000000000 -0400
-+++ xf86-input-evdev-20120718/src/evdev.h	2012-07-18 06:24:32.542274216 -0400
+diff --git a/src/evdev.h b/src/evdev.h
+index c2f9246..8ea9d07 100644
+--- a/src/evdev.h
++++ b/src/evdev.h
 @@ -154,7 +154,8 @@ typedef struct {
  
      int num_vals;           /* number of valuators */
@@ -164,3 +182,6 @@ diff -up xf86-input-evdev-20120718/src/evdev.h.relscroll xf86-input-evdev-201207
      ValuatorMask *vals;     /* new values coming in */
      ValuatorMask *old_vals; /* old values for calculating relative motion */
      ValuatorMask *prox;     /* last values set while not in proximity */
+-- 
+1.7.10.4
+
