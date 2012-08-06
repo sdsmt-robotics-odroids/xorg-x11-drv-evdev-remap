@@ -8,7 +8,7 @@
 Summary:    Xorg X11 evdev input driver
 Name:       xorg-x11-drv-evdev
 Version:    2.7.2
-Release:    4%{?gitdate:.%{gitdate}git%{gitversion}}%{dist}
+Release:    5%{?gitdate:.%{gitdate}git%{gitversion}}%{dist}
 URL:        http://www.x.org
 License:    MIT
 Group:      User Interface/X Hardware Support
@@ -30,7 +30,7 @@ ExcludeArch: s390 s390x %{?rhel:ppc ppc64}
 
 BuildRequires: autoconf automake libtool
 BuildRequires: xorg-x11-server-sdk >= 1.10.99.902
-BuildRequires: libxkbfile-devel libudev-devel mtdev-devel
+BuildRequires: libudev-devel mtdev-devel
 BuildRequires: xorg-x11-util-macros >= 1.3.0
 
 Requires: Xorg %(xserver-sdk-abi-requires ansic)
@@ -86,6 +86,9 @@ X.Org X11 evdev input driver development files.
 
 
 %changelog
+* Mon Aug 06 2012 Peter Hutterer <peter.hutterer@redhat.com> 2.7.2-5
+- Drop libxkbfile-devel BuildRequires, not needed anymore
+
 * Sat Aug 04 2012 Peter Hutterer <peter.hutterer@redhat.com> 2.7.2-4
 - Force autoreconf to avoid spurious libtool errors
 
