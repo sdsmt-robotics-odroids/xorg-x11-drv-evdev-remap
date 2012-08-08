@@ -8,7 +8,7 @@
 Summary:    Xorg X11 evdev input driver
 Name:       xorg-x11-drv-evdev
 Version:    2.7.2
-Release:    5%{?gitdate:.%{gitdate}git%{gitversion}}%{dist}
+Release:    6%{?gitdate:.%{gitdate}git%{gitversion}}%{dist}
 URL:        http://www.x.org
 License:    MIT
 Group:      User Interface/X Hardware Support
@@ -25,6 +25,8 @@ Source0:    ftp://ftp.x.org/pub/individual/driver/%{tarball}-%{version}.tar.bz2
 Patch02: 0001-Allow-relative-scroll-valuators-on-absolute-devices.patch
 # Only disable device on ENODEV to avoid free in sighandler
 Patch03: 0001-Don-t-delete-the-device-on-ENODEV.patch
+# FDO 53168 - Option ButtonMapping is broken
+Patch04: 0001-Fix-broken-ButtonMapping-option-53168.patch
 
 ExcludeArch: s390 s390x %{?rhel:ppc ppc64}
 
@@ -45,6 +47,7 @@ X.Org X11 evdev input driver.
 %setup -q -n %{tarball}-%{?gitdate:%{gitdate}}%{!?gitdate:%{version}}
 %patch02 -p1 -b .relscroll
 %patch03 -p1 -b .enodev
+%patch04 -p1 -b .buttonmapping
 
 %build
 autoreconf --force -v --install || exit 1
@@ -86,6 +89,9 @@ X.Org X11 evdev input driver development files.
 
 
 %changelog
+* Wed Aug 08 2012 Peter Hutterer <peter.hutterer@redhat.com> 2.7.2-6
+- Fix broken ButtonMapping option (regression in 2.7.2)
+
 * Mon Aug 06 2012 Peter Hutterer <peter.hutterer@redhat.com> 2.7.2-5
 - Drop libxkbfile-devel BuildRequires, not needed anymore
 
