@@ -1,0 +1,63 @@
+From 454194f4b530af5d7f92a3b28c28495b4faac547 Mon Sep 17 00:00:00 2001
+From: Mauro Carvalho Chehab <mchehab@redhat.com>
+Date: Tue, 8 Jan 2013 15:04:07 +1000
+Subject: [PATCH evdev] Force a button if MT axes are present and it is not a
+ gamepad
+
+We expect at least BTN_TOUCH for anything with MT axes, but devices that
+don't have that need a button class regardless. Some gamepads define
+MT axes but no buttons, causing a bug in the server when they post a
+TouchBegin.
+
+[ 97436.293] (EE) BUG: triggered 'if (!b || !v)'
+[ 97436.293] (EE) BUG: exevents.c:929 in UpdateDeviceState()
+
+So, ignore it, if it is a joystick (e. g. if it have BTN_JOYSTICK defined).
+Otherwise, fake a button.
+
+This patch basically merges two patches written by Peter Hutterer
+<peter.hutterer@who-t.net>.
+
+Signed-off-by: Mauro Carvalho Chehab <mchehab@redhat.com>
+Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+---
+ src/evdev.c | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
+
+diff --git a/src/evdev.c b/src/evdev.c
+index 7b355d7..5667dc1 100644
+--- a/src/evdev.c
++++ b/src/evdev.c
+@@ -2160,8 +2160,20 @@ EvdevProbe(InputInfoPtr pInfo)
+         xf86IDrvMsg(pInfo, X_PROBED, "Found absolute axes\n");
+         pEvdev->flags |= EVDEV_ABSOLUTE_EVENTS;
+ 
+-        if (has_mt)
++        if (has_mt) {
+             xf86IDrvMsg(pInfo, X_PROBED, "Found absolute multitouch axes\n");
++            if (num_buttons == 0) {
++                if (EvdevBitIsSet(pEvdev->key_bitmask, BTN_JOYSTICK)) {
++                    xf86IDrvMsg(pInfo, X_INFO, "Device is a Joystick with MT without buttons. Ignoring it.\n");
++                    goto out;
++                } else {
++                    xf86IDrvMsg(pInfo, X_INFO, "No buttons found, faking one.\n");
++                    num_buttons = 1;
++                    pEvdev->num_buttons = num_buttons;
++                    pEvdev->flags |= EVDEV_BUTTON_EVENTS;
++                }
++            }
++        }
+ 
+         if ((EvdevBitIsSet(pEvdev->abs_bitmask, ABS_X) &&
+              EvdevBitIsSet(pEvdev->abs_bitmask, ABS_Y))) {
+@@ -2276,6 +2288,7 @@ EvdevProbe(InputInfoPtr pInfo)
+         pEvdev->flags |= EVDEV_RELATIVE_EVENTS;
+     }
+ 
++out:
+     if (rc)
+         xf86IDrvMsg(pInfo, X_WARNING, "Don't know how to use device\n");
+ 
+-- 
+1.8.1
+

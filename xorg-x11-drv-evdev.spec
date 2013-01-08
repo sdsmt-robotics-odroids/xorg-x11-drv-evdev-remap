@@ -8,7 +8,7 @@
 Summary:    Xorg X11 evdev input driver
 Name:       xorg-x11-drv-evdev
 Version:    2.7.3
-Release:    2%{?gitdate:.%{gitdate}git%{gitversion}}%{?dist}
+Release:    3%{?gitdate:.%{gitdate}git%{gitversion}}%{?dist}
 URL:        http://www.x.org
 License:    MIT
 Group:      User Interface/X Hardware Support
@@ -23,6 +23,8 @@ Source0:    ftp://ftp.x.org/pub/individual/driver/%{tarball}-%{version}.tar.bz2
 
 # Bug 805902 - Scrollwheels on tablets are broken
 Patch02: 0001-Allow-relative-scroll-valuators-on-absolute-devices.patch
+# fdo 58967 - Device with MT axes but no buttons triggers BUG macro
+Patch03: 0001-Force-a-button-if-MT-axes-are-present-and-it-is-not-.patch
 
 ExcludeArch: s390 s390x %{?rhel:ppc ppc64}
 
@@ -42,6 +44,7 @@ X.Org X11 evdev input driver.
 %prep
 %setup -q -n %{tarball}-%{?gitdate:%{gitdate}}%{!?gitdate:%{version}}
 %patch02 -p1 -b .relscroll
+%patch03 -p1
 
 %build
 autoreconf --force -v --install || exit 1
@@ -83,6 +86,9 @@ X.Org X11 evdev input driver development files.
 
 
 %changelog
+* Tue Jan 08 2013 Peter Hutterer <peter.hutterer@redhat.com> 2.7.3-3
+- Ignore joysticks with MT axes
+
 * Wed Oct 31 2012 Peter Hutterer <peter.hutterer@redhat.com> 2.7.3-2
 - Fix %{?dist} tag
 
