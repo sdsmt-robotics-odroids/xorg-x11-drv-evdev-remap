@@ -2,13 +2,13 @@
 %global moduledir %(pkg-config xorg-server --variable=moduledir )
 %global driverdir %{moduledir}/input
 
-#global gitdate 20120718
-#global gitversion f5ede9808
+%global gitdate 20130214
+%global gitversion c085c8b6c
 
 Summary:    Xorg X11 evdev input driver
 Name:       xorg-x11-drv-evdev
-Version:    2.7.3
-Release:    5%{?gitdate:.%{gitdate}git%{gitversion}}%{?dist}
+Version:    2.7.99
+Release:    1%{?gitdate:.%{gitdate}git%{gitversion}}%{?dist}
 URL:        http://www.x.org
 License:    MIT
 Group:      User Interface/X Hardware Support
@@ -20,17 +20,6 @@ Source2:    commitid
 %else
 Source0:    ftp://ftp.x.org/pub/individual/driver/%{tarball}-%{version}.tar.bz2
 %endif
-
-# Bug 805902 - Scrollwheels on tablets are broken
-Patch02: 0001-Allow-relative-scroll-valuators-on-absolute-devices.patch
-# fdo 58967 - Device with MT axes but no buttons triggers BUG macro
-Patch03: 0001-Force-a-button-if-MT-axes-are-present-and-it-is-not-.patch
-# Fix axis inversion/swapping (i.e. device rotation) for touch devices
-Patch04: 0001-Localise-tmp-variable.patch
-Patch05: 0002-Move-valuator-swapping-into-a-helper-function.patch
-Patch06: 0003-Move-calibration-adjustments-to-helper-function.patch
-Patch07: 0004-Handle-axis-swap-calibration-and-inversion-for-touch.patch
-
 
 ExcludeArch: s390 s390x %{?rhel:ppc ppc64}
 
@@ -49,12 +38,6 @@ X.Org X11 evdev input driver.
 
 %prep
 %setup -q -n %{tarball}-%{?gitdate:%{gitdate}}%{!?gitdate:%{version}}
-%patch02 -p1 -b .relscroll
-%patch03 -p1
-%patch04 -p1
-%patch05 -p1
-%patch06 -p1
-%patch07 -p1
 
 %build
 autoreconf --force -v --install || exit 1
@@ -96,6 +79,9 @@ X.Org X11 evdev input driver development files.
 
 
 %changelog
+* Thu Feb 14 2013 Peter Hutterer <peter.hutterer@redhat.com> 2.7.99-1.20130214gitc085c8b6c
+- Today's git snapshot
+
 * Mon Jan 14 2013 Peter Hutterer <peter.hutterer@redhat.com> 2.7.3-5
 - Fix device rotation through SwapAxes/Invert{X|Y} for touch devices
 
