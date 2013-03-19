@@ -8,7 +8,7 @@
 Summary:    Xorg X11 evdev input driver
 Name:       xorg-x11-drv-evdev
 Version:    2.7.99
-Release:    5%{?gitdate:.%{gitdate}git%{gitversion}}%{?dist}
+Release:    6%{?gitdate:.%{gitdate}git%{gitversion}}%{?dist}
 URL:        http://www.x.org
 License:    MIT
 Group:      User Interface/X Hardware Support
@@ -21,7 +21,7 @@ Source2:    commitid
 Source0:    ftp://ftp.x.org/pub/individual/driver/%{tarball}-%{version}.tar.bz2
 %endif
 
-ExcludeArch: s390 s390x %{?rhel:ppc ppc64}
+ExcludeArch: s390 s390x
 
 BuildRequires: autoconf automake libtool
 BuildRequires: xorg-x11-server-devel >= 1.10.99.902
@@ -79,6 +79,9 @@ X.Org X11 evdev input driver development files.
 
 
 %changelog
+* Tue Mar 19 2013 Adam Jackson <ajax@redhat.com> 2.7.99-6.20130214gitc085c8b6c
+- Less RHEL customization
+
 * Thu Mar 07 2013 Peter Hutterer <peter.hutterer@redhat.com> - 2.7.99-5.20130214gitc085c8b6c
 - require xorg-x11-server-devel, not -sdk
 
