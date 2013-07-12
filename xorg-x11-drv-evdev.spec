@@ -8,7 +8,7 @@
 Summary:    Xorg X11 evdev input driver
 Name:       xorg-x11-drv-evdev
 Version:    2.8.1
-Release:    1%{?gitdate:.%{gitdate}git%{gitversion}}%{?dist}
+Release:    2%{?gitdate:.%{gitdate}git%{gitversion}}%{?dist}
 URL:        http://www.x.org
 License:    MIT
 Group:      User Interface/X Hardware Support
@@ -79,6 +79,9 @@ X.Org X11 evdev input driver development files.
 
 
 %changelog
+* Fri Jul 12 2013 Peter Hutterer <peter.hutterer@redhat.com> 2.8.1-2
+- Fix changelog - 'percent signs in specfile changelog should be escaped'
+
 * Thu Jul 11 2013 Peter Hutterer <peter.hutterer@redhat.com> 2.8.1-1
 - evdev 2.8.1
 
@@ -119,7 +122,7 @@ X.Org X11 evdev input driver development files.
 - Ignore joysticks with MT axes
 
 * Wed Oct 31 2012 Peter Hutterer <peter.hutterer@redhat.com> 2.7.3-2
-- Fix %{?dist} tag
+- Fix {?dist} tag
 
 * Mon Aug 13 2012 Peter Hutterer <peter.hutterer@redhat.com> 2.7.3-1
 - evdev 2.7.3
