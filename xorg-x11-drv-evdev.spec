@@ -2,13 +2,13 @@
 %global moduledir %(pkg-config xorg-server --variable=moduledir )
 %global driverdir %{moduledir}/input
 
-#global gitdate 20130214
-%global gitversion c085c8b6c
+%global gitdate 20140417
+%global gitversion ae67f64
 
 Summary:    Xorg X11 evdev input driver
 Name:       xorg-x11-drv-evdev
-Version:    2.8.2
-Release:    6%{?gitdate:.%{gitdate}git%{gitversion}}%{?dist}
+Version:    2.8.99
+Release:    0.1%{?gitdate:.%{gitdate}git%{gitversion}}%{?dist}
 URL:        http://www.x.org
 License:    MIT
 Group:      User Interface/X Hardware Support
@@ -25,7 +25,7 @@ ExcludeArch: s390 s390x
 
 BuildRequires: autoconf automake libtool
 BuildRequires: xorg-x11-server-devel >= 1.10.99.902
-BuildRequires: libudev-devel mtdev-devel
+BuildRequires: libudev-devel mtdev-devel libevdev-devel
 BuildRequires: xorg-x11-util-macros >= 1.3.0
 
 Requires: Xorg %(xserver-sdk-abi-requires ansic)
@@ -45,19 +45,14 @@ autoreconf --force -v --install || exit 1
 make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
-
-make install DESTDIR=$RPM_BUILD_ROOT
+%make_install
 
 # FIXME: Remove all libtool archives (*.la) from modules directory.  This
 # should be fixed in upstream Makefile.am or whatever.
 find $RPM_BUILD_ROOT -regex ".*\.la$" | xargs rm -f --
 
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 %files
-%defattr(-,root,root,-)
 %doc COPYING
 %{driverdir}/evdev_drv.so
 %{_mandir}/man4/evdev.4*
@@ -71,7 +66,6 @@ Requires:   pkgconfig
 X.Org X11 evdev input driver development files.
 
 %files devel
-%defattr(-,root,root,-)
 %doc COPYING
 %{_libdir}/pkgconfig/xorg-evdev.pc
 %dir %{_includedir}/xorg
@@ -79,6 +73,10 @@ X.Org X11 evdev input driver development files.
 
 
 %changelog
+* Thu Apr 17 2014 Hans de Goede <hdegoede@redhat.com> - 2.8.99-0.1.20140417gitae67f64
+- Update to current git for server managed fd support
+- Rebuild for xserver 1.15.99.902
+
 * Mon Jan 13 2014 Adam Jackson <ajax@redhat.com> - 2.8.2-6
 - 1.15 ABI rebuild
 
