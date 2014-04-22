@@ -8,7 +8,7 @@
 Summary:    Xorg X11 evdev input driver
 Name:       xorg-x11-drv-evdev
 Version:    2.8.99
-Release:    0.1%{?gitdate:.%{gitdate}git%{gitversion}}%{?dist}
+Release:    1%{?gitdate:.%{gitdate}git%{gitversion}}%{?dist}
 URL:        http://www.x.org
 License:    MIT
 Group:      User Interface/X Hardware Support
@@ -32,6 +32,9 @@ Requires: Xorg %(xserver-sdk-abi-requires ansic)
 Requires: Xorg %(xserver-sdk-abi-requires xinput)
 Requires:  xkeyboard-config >= 1.4-1
 Requires: mtdev
+
+Obsoletes: xorg-x11-drv-mouse < 1.9.0-8
+Obsoletes: xorg-x11-drv-keyboard < 1.8.0-2
 
 %description
 X.Org X11 evdev input driver.
@@ -73,6 +76,9 @@ X.Org X11 evdev input driver development files.
 
 
 %changelog
+* Tue Apr 22 2014 Peter Hutterer <peter.hutterer@redhat.com> 2.8.99-1.20140417gitae67f64
+- Obsolete xorg-x11-drv-mouse and xorg-x11-drv-keyboard
+
 * Thu Apr 17 2014 Hans de Goede <hdegoede@redhat.com> - 2.8.99-0.1.20140417gitae67f64
 - Update to current git for server managed fd support
 - Rebuild for xserver 1.15.99.902
