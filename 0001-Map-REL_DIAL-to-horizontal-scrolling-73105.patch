@@ -1,0 +1,44 @@
+From e677c4ccc28e28e10c5fb0e9fa2b3a6fbff6cc51 Mon Sep 17 00:00:00 2001
+From: Peter Hutterer <peter.hutterer@who-t.net>
+Date: Mon, 28 Apr 2014 12:25:56 +1000
+Subject: [PATCH xf86-input-evdev] Map REL_DIAL to horizontal scrolling
+ (#73105)
+
+This was the original behaviour introduced in
+f77410e1f97d394e98c854fd174f712666b0544c and stayed that way until smooth
+scrolling erroneously added it as vertical axis in
+b450efdf95999cad08de23ce069f04a66bdae24b. Revert to horizontal scrolling to
+restore the previous behaviour - which unbreaks scrolling on Microsoft mice.
+
+X.Org Bug 73105 <http://bugs.freedesktop.org/show_bug.cgi?id=73105>
+
+Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+---
+ src/evdev.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/evdev.c b/src/evdev.c
+index ed84f0f..6d02bdd 100644
+--- a/src/evdev.c
++++ b/src/evdev.c
+@@ -1574,7 +1574,7 @@ EvdevAddAbsValuatorClass(DeviceIntPtr device, int want_scroll_axes)
+                                        NO_AXIS_LIMITS, NO_AXIS_LIMITS,
+                                        0, 0, 0, Relative);
+             SetScrollValuator(device, pEvdev->rel_axis_map[idx],
+-                              SCROLL_TYPE_VERTICAL,
++                              SCROLL_TYPE_HORIZONTAL,
+                               -pEvdev->smoothScroll.dial_delta,
+                               SCROLL_FLAG_NONE);
+         }
+@@ -1652,7 +1652,7 @@ EvdevSetScrollValuators(DeviceIntPtr device)
+ 
+     axnum = pEvdev->rel_axis_map[REL_DIAL];
+     if (axnum != -1) {
+-        SetScrollValuator(device, axnum, SCROLL_TYPE_VERTICAL,
++        SetScrollValuator(device, axnum, SCROLL_TYPE_HORIZONTAL,
+                           -pEvdev->smoothScroll.dial_delta,
+                           SCROLL_FLAG_NONE);
+     }
+-- 
+1.9.0
+
