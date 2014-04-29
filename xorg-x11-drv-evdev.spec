@@ -2,13 +2,13 @@
 %global moduledir %(pkg-config xorg-server --variable=moduledir )
 %global driverdir %{moduledir}/input
 
-%global gitdate 20140417
+#global gitdate 20140417
 %global gitversion ae67f64
 
 Summary:    Xorg X11 evdev input driver
 Name:       xorg-x11-drv-evdev
-Version:    2.8.99
-Release:    3%{?gitdate:.%{gitdate}git%{gitversion}}%{?dist}
+Version:    2.8.99.1
+Release:    1%{?gitdate:.%{gitdate}git%{gitversion}}%{?dist}
 URL:        http://www.x.org
 License:    MIT
 Group:      User Interface/X Hardware Support
@@ -20,8 +20,6 @@ Source2:    commitid
 %else
 Source0:    ftp://ftp.x.org/pub/individual/driver/%{tarball}-%{version}.tar.bz2
 %endif
-
-Patch0:     0001-Map-REL_DIAL-to-horizontal-scrolling-73105.patch
 
 ExcludeArch: s390 s390x
 
@@ -43,7 +41,6 @@ X.Org X11 evdev input driver.
 
 %prep
 %setup -q -n %{tarball}-%{?gitdate:%{gitdate}}%{!?gitdate:%{version}}
-%patch0 -p1
 
 %build
 autoreconf --force -v --install || exit 1
@@ -79,6 +76,10 @@ X.Org X11 evdev input driver development files.
 
 
 %changelog
+* Tue Apr 29 2014 Peter Hutterer <peter.hutterer@redhat.com> 2.8.99.1-1
+- Update to 2.8.99.1
+- Update brings in a fixed version of the REL_DIAL patch for #869065
+
 * Mon Apr 28 2014 Hans de Goede <hdegoede@redhat.com> - 2.8.99-3.20140417gitae67f64
 - xserver 1.15.99-20140428 git snapshot ABI rebuild
 - Map REL_DIAL to horizontal scrolling (bfdo#73105, rhbz#869065)
