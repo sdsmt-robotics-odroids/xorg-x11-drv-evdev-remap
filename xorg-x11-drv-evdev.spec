@@ -7,8 +7,8 @@
 
 Summary:    Xorg X11 evdev input driver
 Name:       xorg-x11-drv-evdev
-Version:    2.9.1
-Release:    2%{?gitdate:.%{gitdate}git%{gitversion}}%{?dist}
+Version:    2.9.2
+Release:    1%{?gitdate:.%{gitdate}git%{gitversion}}%{?dist}
 URL:        http://www.x.org
 License:    MIT
 Group:      User Interface/X Hardware Support
@@ -79,6 +79,9 @@ X.Org X11 evdev input driver development files.
 
 
 %changelog
+* Fri Mar 27 2015 Peter Hutterer <peter.hutterer@redhat.com> 2.9.2-1
+- evdev 2.9.2
+
 * Mon Feb 23 2015 Peter Hutterer <peter.hutterer@redhat.com> 2.9.1-2
 - Drop evdev-specific XKB settings, let the server chose defaults
 
