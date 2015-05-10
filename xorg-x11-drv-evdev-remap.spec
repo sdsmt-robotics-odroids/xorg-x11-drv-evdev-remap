@@ -4,9 +4,10 @@
 
 #global gitdate 20150807
 %global gitversion 66c997886
+%global gitmd5 aa3363ce5061d0c4d1e7f7019b99716d
 
 Summary:    Xorg X11 evdev input driver
-Name:       xorg-x11-drv-evdev
+Name:       xorg-x11-drv-evdev-remap
 Version:    2.10.3
 Release:    1%{?gitdate:.%{gitdate}git%{gitversion}}%{?dist}
 URL:        http://www.x.org
@@ -14,12 +15,14 @@ License:    MIT
 Group:      User Interface/X Hardware Support
 
 %if 0%{?gitdate}
-Source0:    %{tarball}-%{gitdate}.tar.bz2
+Source0:    http://pkgs.fedoraproject.org/repo/pkgs/xorg-x11-drv-evdev/%{tarball}-%{gitdate}.tar.bz2/%{gitmd5}/%{tarball}-%{gitdate}.tar.bz2
 Source1:    make-git-snapshot.sh
 Source2:    commitid
 %else
 Source0:    ftp://ftp.x.org/pub/individual/driver/%{tarball}-%{version}.tar.bz2
 %endif
+
+Patch00:    %{name}-2.10.3-code-remap.patch
 
 ExcludeArch: s390 s390x
 
@@ -36,11 +39,16 @@ Requires: mtdev
 Obsoletes: xorg-x11-drv-mouse < 1.9.0-8
 Obsoletes: xorg-x11-drv-keyboard < 1.8.0-6
 
+Conflicts: xorg-x11-drv-evdev
+Provides: xorg-x11-drv-evdev = %{version}-%{release}
+Provides: xorg-x11-drv-evdev%{?_isa} = %{version}-%{release}
+
 %description
 X.Org X11 evdev input driver.
 
 %prep
 %setup -q -n %{tarball}-%{?gitdate:%{gitdate}}%{!?gitdate:%{version}}
+%patch00 -p1
 
 %build
 autoreconf --force -v --install || exit 1
@@ -76,6 +84,9 @@ X.Org X11 evdev input driver development files.
 
 
 %changelog
+* Wed Oct 19 2016 Scott K Logan <logans@cottsay.net>
+- Add remap patch from http://www.thenautilus.net/SW/xf86-input-evdev/
+
 * Wed Jun 01 2016 Peter Hutterer <peter.hutterer@redhat.com> 2.10.3-1
 - evdev 2.10.3
 
