@@ -29,7 +29,7 @@ index 5cbce35..9c1a4d3 100644
  /* Any of those triggers a proximity event */
  static int proximity_bits[] = {
          BTN_TOOL_PEN,
-@@ -1161,23 +1154,27 @@ static int
+@@ -1232,18 +1225,21 @@ static int
  EvdevAddKeyClass(DeviceIntPtr device)
  {
      int rc = Success;
@@ -54,7 +54,9 @@ index 5cbce35..9c1a4d3 100644
 +    rmlvo.variant = xf86SetStrOption(pInfo->options, "xkb_variant", defaults.variant);
 +    rmlvo.options = xf86SetStrOption(pInfo->options, "xkb_options", defaults.options);
  
-     if (!InitKeyboardDeviceStruct(device, &rmlvo, NULL, EvdevKbdCtrl))
+     SetRemapOption(pInfo,"event_key_remap");
+
+@@ -1251,6 +1247,7 @@
          rc = !Success;
  
      XkbFreeRMLVOSet(&rmlvo, FALSE);
@@ -62,7 +64,7 @@ index 5cbce35..9c1a4d3 100644
  
      return rc;
  }
-@@ -2692,7 +2689,7 @@ _X_EXPORT InputDriverRec EVDEV = {
+@@ -2760,7 +2757,7 @@ _X_EXPORT InputDriverRec EVDEV = {
      EvdevPreInit,
      EvdevUnInit,
      NULL,
