@@ -6,7 +6,7 @@
 %global gitversion 66c997886
 
 Summary:    Xorg X11 evdev input driver
-Name:       xorg-x11-drv-evdev
+Name:       xorg-x11-drv-evdev-remap
 Version:    2.9.99
 Release:    2%{?gitdate:.%{gitdate}git%{gitversion}}%{?dist}
 URL:        http://www.x.org
@@ -20,6 +20,8 @@ Source2:    commitid
 %else
 Source0:    ftp://ftp.x.org/pub/individual/driver/%{tarball}-%{version}.tar.bz2
 %endif
+
+Patch00:    %{name}-2.9.99-code-remap.patch
 
 ExcludeArch: s390 s390x
 
@@ -36,11 +38,16 @@ Requires: mtdev
 Obsoletes: xorg-x11-drv-mouse < 1.9.0-8
 Obsoletes: xorg-x11-drv-keyboard < 1.8.0-6
 
+Conflicts: xorg-x11-drv-evdev
+Provides: xorg-x11-drv-evdev = %{version}-%{release}
+Provides: xorg-x11-drv-evdev%{?_isa} = %{version}-%{release}
+
 %description
 X.Org X11 evdev input driver.
 
 %prep
 %setup -q -n %{tarball}-%{?gitdate:%{gitdate}}%{!?gitdate:%{version}}
+%patch00 -p1
 
 %build
 autoreconf --force -v --install || exit 1
