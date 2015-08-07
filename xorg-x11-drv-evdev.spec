@@ -2,13 +2,13 @@
 %global moduledir %(pkg-config xorg-server --variable=moduledir )
 %global driverdir %{moduledir}/input
 
-#global gitdate 20140417
-%global gitversion ae67f64
+%global gitdate 20150807
+%global gitversion 66c997886
 
 Summary:    Xorg X11 evdev input driver
 Name:       xorg-x11-drv-evdev
-Version:    2.9.2
-Release:    3%{?gitdate:.%{gitdate}git%{gitversion}}%{?dist}
+Version:    2.9.99
+Release:    1%{?gitdate:.%{gitdate}git%{gitversion}}%{?dist}
 URL:        http://www.x.org
 License:    MIT
 Group:      User Interface/X Hardware Support
@@ -20,8 +20,6 @@ Source2:    commitid
 %else
 Source0:    ftp://ftp.x.org/pub/individual/driver/%{tarball}-%{version}.tar.bz2
 %endif
-
-Patch01:    0001-Drop-evdev-specific-XKB-defaults.patch
 
 ExcludeArch: s390 s390x
 
@@ -43,7 +41,6 @@ X.Org X11 evdev input driver.
 
 %prep
 %setup -q -n %{tarball}-%{?gitdate:%{gitdate}}%{!?gitdate:%{version}}
-%patch01 -p1
 
 %build
 autoreconf --force -v --install || exit 1
@@ -62,7 +59,7 @@ find $RPM_BUILD_ROOT -regex ".*\.la$" | xargs rm -f --
 %doc COPYING
 %{driverdir}/evdev_drv.so
 %{_mandir}/man4/evdev.4*
-
+%{_datadir}/X11/xorg.conf.d/10-evdev.conf
 
 %package devel
 Summary:    Xorg X11 evdev input driver development package.
@@ -79,6 +76,10 @@ X.Org X11 evdev input driver development files.
 
 
 %changelog
+* Fri Aug 07 2015 Peter Hutterer <peter.hutterer@redhat.com> 2.9.99-1
+- git snapshot for 2.10, mostly to pick up 10-evdev.conf that moved from the
+  server to here
+
 * Wed Jul 29 2015 Dave Airlie <airlied@redhat.com> - 2.9.2-3
 - 1.15 ABI rebuild
 
