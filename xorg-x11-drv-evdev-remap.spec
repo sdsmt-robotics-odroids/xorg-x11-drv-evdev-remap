@@ -4,6 +4,7 @@
 
 %global gitdate 20150807
 %global gitversion 66c997886
+%global gitmd5 ff44db3ef641f49af02f17a8c727bc7c
 
 Summary:    Xorg X11 evdev input driver
 Name:       xorg-x11-drv-evdev-remap
@@ -14,7 +15,7 @@ License:    MIT
 Group:      User Interface/X Hardware Support
 
 %if 0%{?gitdate}
-Source0:    %{tarball}-%{gitdate}.tar.bz2
+Source0:    http://pkgs.fedoraproject.org/repo/pkgs/xorg-x11-drv-evdev/%{tarball}-%{gitdate}.tar.bz2/%{gitmd5}/%{tarball}-%{gitdate}.tar.bz2
 Source1:    make-git-snapshot.sh
 Source2:    commitid
 %else
