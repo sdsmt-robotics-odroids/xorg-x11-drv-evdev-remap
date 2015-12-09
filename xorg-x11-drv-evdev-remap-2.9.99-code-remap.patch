@@ -15,10 +15,11 @@ diff --git a/man/evdev.man b/man/evdev.man
 index 06613fc..08a7995 100644
 --- a/man/evdev.man
 +++ b/man/evdev.man
-@@ -238,6 +238,17 @@ Default: "1".  Property: "Evdev Scrolling Distance".
+@@ -238,6 +238,18 @@ Default: "1".  Property: "Evdev Scrolling Distance".
  .BI "Option \*qDialDelta\*q \*q" integer \*q
  The amount of motion considered one unit of turning the dial.  Default: "1".
  Property: "Evdev Scrolling Distance".
++.TP 7
 +.BI "Option \*qevent_key_remap\*q \*q" "integer=integer ..." \*q
 +Specifies a set of mappings for key events; the number on the
 +left-hand side of the equal sign must be an evdev keycode (look it up
@@ -37,7 +38,7 @@ diff --git a/src/evdev.c b/src/evdev.c
 index 9cfc982..272b9f6 100644
 --- a/src/evdev.c
 +++ b/src/evdev.c
-@@ -126,6 +126,46 @@ static Atom prop_device;
+@@ -135,6 +135,46 @@ static Atom prop_device;
  static Atom prop_virtual;
  static Atom prop_scroll_dist;
  
@@ -84,7 +85,7 @@ index 9cfc982..272b9f6 100644
  static int EvdevSwitchMode(ClientPtr client, DeviceIntPtr device, int mode)
  {
      InputInfoPtr pInfo;
-@@ -257,6 +297,41 @@ EvdevDeviceIsVirtual(const char* devicenode)
+@@ -261,6 +301,41 @@ static int wheel_left_button = 6;
      return rc;
  }
  
@@ -126,7 +127,6 @@ index 9cfc982..272b9f6 100644
  
  static EventQueuePtr
  EvdevNextInQueue(InputInfoPtr pInfo)
- {
 @@ -279,7 +355,7 @@ EvdevNextInQueue(InputInfoPtr pInfo)
  void
  EvdevQueueKbdEvent(InputInfoPtr pInfo, struct input_event *ev, int value)
@@ -136,16 +136,16 @@ index 9cfc982..272b9f6 100644
      EventQueuePtr pQueue;
  
      /* Filter all repeated events from device.
-@@ -1169,6 +1245,8 @@ EvdevAddKeyClass(DeviceIntPtr device)
-     rmlvo.variant = xf86SetStrOption(pInfo->options, "xkb_variant", NULL);
-     rmlvo.options = xf86SetStrOption(pInfo->options, "xkb_options", NULL);
+@@ -1161,6 +1237,8 @@ EvdevAddKeyClass(DeviceIntPtr device)
+     rmlvo.variant = xf86SetStrOption(pInfo->options, "xkb_variant", defaults.variant);
+     rmlvo.options = xf86SetStrOption(pInfo->options, "xkb_options", defaults.options);
  
 +    SetRemapOption(pInfo,"event_key_remap");
 +
      if (!InitKeyboardDeviceStruct(device, &rmlvo, NULL, EvdevKbdCtrl))
          rc = !Success;
  
-@@ -2030,6 +2108,7 @@ EvdevProc(DeviceIntPtr device, int what)
+@@ -1996,6 +2074,7 @@ EvdevProc(DeviceIntPtr device, int what)
  	xf86IDrvMsg(pInfo, X_INFO, "Close\n");
          EvdevCloseDevice(pInfo);
          EvdevFreeMasks(pEvdev);
@@ -157,7 +157,7 @@ diff --git a/src/evdev.h b/src/evdev.h
 index 2a010e6..f7c8d1e 100644
 --- a/src/evdev.h
 +++ b/src/evdev.h
-@@ -140,6 +140,14 @@ typedef struct {
+@@ -152,6 +152,14 @@ typedef struct {
  } EventQueueRec, *EventQueuePtr;
  
  typedef struct {
@@ -172,7 +172,7 @@ index 2a010e6..f7c8d1e 100644
      struct libevdev *dev;
  
      char *device;
-@@ -226,6 +235,8 @@ typedef struct {
+@@ -239,6 +247,8 @@ typedef struct {
  
      unsigned char btnmap[32];           /* config-file specified button mapping */
  
